@@ -52,7 +52,7 @@
   <a class="logo-link" href="./index.html">
     <img
       class="logo-dark"
-      srcset="./assets/img/k-logo.png"
+      srcset="./assets/img/iele-logo.png"
       alt="K"
       style="height: 48px"
     />
@@ -271,26 +271,26 @@ We will test this with <code>./tests/ci/with-k bothk ./Build test-all</code> (or
 </li>
 <li>
 <p>Place a line of <code>-</code> after each block of syntax declarations.</p>
-<pre class="hljs"><code>    syntax Foo ::= &quot;newSymbol&quot;
- // --------------------------
-    rule &lt;k&gt; newSymbol =&gt; . ... &lt;/k&gt;
+<pre class="hljs"><code><span class="hljs-keyword">    syntax</span> Foo ::= <span class="hljs-string">&quot;newSymbol&quot;</span>
+ <span class="hljs-comment">// --------------------------</span><span class="hljs-keyword">
+    rule</span> &lt;k&gt; newSymbol =&gt; . ... &lt;/k&gt;
 </code></pre>
 <p>Notice that if there are rules immediately following the syntax declaration, a commented-out line of <code>-</code> is inserted afterward.
 Notice that the width of the line of <code>-</code> matches that of the preceding line.</p>
 </li>
 <li>
 <p>Place spaces around parentheses and commas in K&apos;s pretty functional-style syntax declarations.</p>
-<pre class="hljs"><code>    syntax Foo ::= newFunctionalSyntax ( Int , String )
- // ---------------------------------------------------
+<pre class="hljs"><code><span class="hljs-keyword">    syntax</span> Foo ::= newFunctionalSyntax (<span class="hljs-keyword"> Int</span> ,<span class="hljs-keyword"> String</span> )
+ <span class="hljs-comment">// ---------------------------------------------------</span>
 </code></pre>
 </li>
 <li>
 <p>When multiple structurally-similar rules are present, line up as much as possible (and makes sense).</p>
-<pre class="hljs"><code>    rule &lt;k&gt; #do1       =&gt; . ... &lt;/k&gt; &lt;cell1&gt; not-done =&gt; done        &lt;/cell1&gt;
-    rule &lt;k&gt; #do1Longer =&gt; . ... &lt;/k&gt; &lt;cell1&gt; not-done =&gt; done-longer &lt;/cell1&gt;
+<pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #do1       =&gt; . ... &lt;/k&gt; &lt;cell1&gt; not-done =&gt; done        &lt;/cell1&gt;<span class="hljs-keyword">
+    rule</span> &lt;k&gt; #do1Longer =&gt; . ... &lt;/k&gt; &lt;cell1&gt; not-done =&gt; done-longer &lt;/cell1&gt;<span class="hljs-keyword">
 
-    rule &lt;k&gt; #do2     =&gt; . ... &lt;/k&gt; &lt;cell2&gt; not-done =&gt; done2 &lt;/cell2&gt;
-    rule &lt;k&gt; #doShort =&gt; . ... &lt;/k&gt; &lt;cell2&gt; nd       =&gt; done2 &lt;/cell2&gt;
+    rule</span> &lt;k&gt; #do2     =&gt; . ... &lt;/k&gt; &lt;cell2&gt; not-done =&gt; done2 &lt;/cell2&gt;<span class="hljs-keyword">
+    rule</span> &lt;k&gt; #doShort =&gt; . ... &lt;/k&gt; &lt;cell2&gt; nd       =&gt; done2 &lt;/cell2&gt;
 </code></pre>
 <p>This makes it simpler to make changes to entire groups of rules at a time using sufficiently modern editors.
 Notice that if we break alignment (eg. from the <code>#do1</code> group above to the <code>#do2</code> group), we put an extra line between the groups of rules.</p>
@@ -298,10 +298,10 @@ Notice that if we break alignment (eg. from the <code>#do1</code> group above to
 <li>
 <p>Line up the <code>r</code> in <code>requires</code> with the <code>l</code> in <code>rule</code> (if it&apos;s not all on one line).
 Similarly, line up the end of <code>andBool</code> for extra side-conditions with the end of <code>requires</code>.</p>
-<pre class="hljs"><code>    rule &lt;k&gt; A =&gt; B ... &lt;/k&gt;
-         SOME_LARGE_CONFIGURATION
+<pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; A =&gt; B ... &lt;/k&gt;
+         SOME_LARGE_CONFIGURATION<span class="hljs-keyword">
 
-      requires A &gt; 3
+      requires</span> A &gt; <span class="hljs-number">3</span>
        andBool isPrime(A)
 </code></pre>
 </li>

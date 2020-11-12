@@ -52,7 +52,7 @@
   <a class="logo-link" href="../index.html">
     <img
       class="logo-dark"
-      srcset="../assets/img/k-logo.png"
+      srcset="../assets/img/iele-logo.png"
       alt="K"
       style="height: 48px"
     />
@@ -116,17 +116,17 @@
           class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content"
           role="main"
         >
-          <div class="markdown-preview"><html><head></head><body><pre class="hljs"><code>module IELE-NODE
-    imports IELE
-    imports IELE-BINARY
-    imports K-REFLECTION
-    imports COLLECTIONS
+          <div class="markdown-preview"><html><head></head><body><pre class="hljs"><code><span class="hljs-keyword">module</span> IELE-NODE<span class="hljs-keyword">
+    imports</span> IELE<span class="hljs-keyword">
+    imports</span> IELE-BINARY<span class="hljs-keyword">
+    imports</span> K-REFLECTION<span class="hljs-keyword">
+    imports</span> COLLECTIONS<span class="hljs-keyword">
 
-    syntax Int ::= #getBalance(Int) [function, hook(BLOCKCHAIN.getBalance)]
-                 | #getNonce(Int) [function, hook(BLOCKCHAIN.getNonce)]
-    syntax Bool ::= #isCodeEmpty(Int) [function, hook(BLOCKCHAIN.isCodeEmpty)]
- // ---------------------------------------------------------------------------
-    rule &lt;k&gt; #loadAccount ACCT =&gt; . ... &lt;/k&gt;
+    syntax</span><span class="hljs-keyword"> Int</span> ::= #getBalance(<span class="hljs-keyword">Int</span>) [function, hook(BLOCKCHAIN.getBalance)]
+                 | #getNonce(<span class="hljs-keyword">Int</span>) [function, hook(BLOCKCHAIN.getNonce)]<span class="hljs-keyword">
+    syntax</span><span class="hljs-keyword"> Bool</span> ::= #isCodeEmpty(<span class="hljs-keyword">Int</span>) [function, hook(BLOCKCHAIN.isCodeEmpty)]
+ <span class="hljs-comment">// ---------------------------------------------------------------------------</span><span class="hljs-keyword">
+    rule</span> &lt;k&gt; #loadAccount ACCT =&gt; . ... &lt;/k&gt;
          &lt;activeAccounts&gt; ACCTS (.Set =&gt; SetItem(ACCT)) &lt;/activeAccounts&gt;
          &lt;accounts&gt;
            ( .Bag
@@ -139,52 +139,52 @@
              &lt;/account&gt;
            )
            ...
-         &lt;/accounts&gt;
-      requires notBool ACCT in ACCTS
+         &lt;/accounts&gt;<span class="hljs-keyword">
+      requires</span> notBool ACCT in ACCTS<span class="hljs-keyword">
 
-    syntax Int ::= #getStorageData(Int, Int) [function, hook(BLOCKCHAIN.getStorageData)]
- // --------------------------------------------------------------------------------
-    rule &lt;k&gt; #lookupStorage(ACCT, INDEX) =&gt; . ... &lt;/k&gt;
+    syntax</span><span class="hljs-keyword"> Int</span> ::= #getStorageData(<span class="hljs-keyword">Int</span>,<span class="hljs-keyword"> Int</span>) [function, hook(BLOCKCHAIN.getStorageData)]
+ <span class="hljs-comment">// --------------------------------------------------------------------------------</span><span class="hljs-keyword">
+    rule</span> &lt;k&gt; #lookupStorage(ACCT, INDEX) =&gt; . ... &lt;/k&gt;
          &lt;account&gt;
            &lt;acctID&gt;  ACCT                                                         &lt;/acctID&gt;
            &lt;storage&gt; STORAGE =&gt; STORAGE [ INDEX &lt;- #getStorageData(ACCT, INDEX) ] &lt;/storage&gt;
            ...
-         &lt;/account&gt;
-      requires notBool INDEX in_keys(STORAGE)
+         &lt;/account&gt;<span class="hljs-keyword">
+      requires</span> notBool INDEX in_keys(STORAGE)<span class="hljs-keyword">
 
-    syntax String ::= #getCode(Int) [function, hook(BLOCKCHAIN.getCode)]
- // ----------------------------------------------------------------
-    rule &lt;k&gt; #lookupCode(ACCT) =&gt; . ... &lt;/k&gt;
+    syntax</span><span class="hljs-keyword"> String</span> ::= #getCode(<span class="hljs-keyword">Int</span>) [function, hook(BLOCKCHAIN.getCode)]
+ <span class="hljs-comment">// ----------------------------------------------------------------</span><span class="hljs-keyword">
+    rule</span> &lt;k&gt; #lookupCode(ACCT) =&gt; . ... &lt;/k&gt;
          &lt;account&gt;
            &lt;acctID&gt; ACCT &lt;/acctID&gt;
            &lt;code&gt; .Contract =&gt; #dasmContract(#parseByteStackRaw(#getCode(ACCT)), Main) &lt;/code&gt;
            ...
-         &lt;/account&gt;
+         &lt;/account&gt;<span class="hljs-keyword">
 
-    syntax Int ::= #getBlockhash(Int) [function, hook(BLOCKCHAIN.getBlockhash)]
- // -----------------------------------------------------------------------
-    rule #exec REG = call @iele.blockhash ( N ) =&gt; #load REG #getBlockhash(N)
-      requires N &gt;=Int 0  andBool N &lt;Int 256
-    rule #exec REG = call @iele.blockhash ( N ) =&gt; #load REG 0
-      requires N &lt;Int 0 orBool N &gt;=Int 256
+    syntax</span><span class="hljs-keyword"> Int</span> ::= #getBlockhash(<span class="hljs-keyword">Int</span>) [function, hook(BLOCKCHAIN.getBlockhash)]
+ <span class="hljs-comment">// -----------------------------------------------------------------------</span><span class="hljs-keyword">
+    rule</span> #exec REG = call @iele.blockhash ( N ) =&gt; #load REG #getBlockhash(N)<span class="hljs-keyword">
+      requires</span> N &gt;=<span class="hljs-keyword">Int</span> <span class="hljs-number">0</span>  andBool N &lt;<span class="hljs-keyword">Int</span> <span class="hljs-number">256</span><span class="hljs-keyword">
+    rule</span> #exec REG = call @iele.blockhash ( N ) =&gt; #load REG <span class="hljs-number">0</span><span class="hljs-keyword">
+      requires</span> N &lt;<span class="hljs-keyword">Int</span> <span class="hljs-number">0</span> orBool N &gt;=<span class="hljs-keyword">Int</span> <span class="hljs-number">256</span><span class="hljs-keyword">
 
-    syntax IELESimulation ::= runVM(iscreate: Bool, to: Int, from: Int, code: String, args: JSONs, value: Int, gasprice: Int, gas: Int, beneficiary: Int, difficulty: Int, number: Int, gaslimit: Int, timestamp: Int, function: String) [symbol]
+    syntax</span> IELESimulation ::= runVM(iscreate:<span class="hljs-keyword"> Bool</span>, to:<span class="hljs-keyword"> Int</span>, from:<span class="hljs-keyword"> Int</span>, code:<span class="hljs-keyword"> String</span>, args: JSONs, value:<span class="hljs-keyword"> Int</span>, gasprice:<span class="hljs-keyword"> Int</span>, gas:<span class="hljs-keyword"> Int</span>, beneficiary:<span class="hljs-keyword"> Int</span>, difficulty:<span class="hljs-keyword"> Int</span>, number:<span class="hljs-keyword"> Int</span>, gaslimit:<span class="hljs-keyword"> Int</span>, timestamp:<span class="hljs-keyword"> Int</span>, function:<span class="hljs-keyword"> String</span>) [symbol]<span class="hljs-keyword">
 
-    rule &lt;k&gt; (.K =&gt; #loadAccount ACCTFROM) ~&gt; runVM(... from: ACCTFROM) ... &lt;/k&gt;
-         &lt;activeAccounts&gt; .Set &lt;/activeAccounts&gt;
+    rule</span> &lt;k&gt; (.K =&gt; #loadAccount ACCTFROM) ~&gt; runVM(... from: ACCTFROM) ... &lt;/k&gt;
+         &lt;activeAccounts&gt; .Set &lt;/activeAccounts&gt;<span class="hljs-keyword">
 
-    rule &lt;k&gt; runVM(true, _, ACCTFROM, CODESTR, ARGS, VALUE, GPRICE, GAVAIL, CB, DIFF, NUMB, GLIMIT, TS, _)
+    rule</span> &lt;k&gt; runVM(true, _, ACCTFROM, CODESTR, ARGS, VALUE, GPRICE, GAVAIL, CB, DIFF, NUMB, GLIMIT, TS, _)
           =&gt; #fun(CODE =&gt; #fun(CONTRACT =&gt;
              #checkContract CONTRACT
-          ~&gt; #create ACCTFROM #newAddr(ACCTFROM, NONCE -Int 1) (GAVAIL *Int Sgasdivisor &lt; SCHED &gt;) VALUE CONTRACT #toInts(ARGS)
-          ~&gt; #codeDeposit #newAddr(ACCTFROM, NONCE -Int 1) #sizeWordStack(CODE) CONTRACT %0 %1 true
+          ~&gt; #create ACCTFROM #newAddr(ACCTFROM, NONCE -<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>) (GAVAIL *<span class="hljs-keyword">Int</span> Sgasdivisor &lt; SCHED &gt;) VALUE CONTRACT #toInts(ARGS)
+          ~&gt; #codeDeposit #newAddr(ACCTFROM, NONCE -<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>) #sizeWordStack(CODE) CONTRACT %<span class="hljs-number">0</span> %<span class="hljs-number">1</span> true
           ~&gt; #trimAccounts)(#if #isValidContract(CODE) #then #dasmContract(CODE, Main) #else #illFormed #fi))(#parseByteStackRaw(CODESTR))
          ...
          &lt;/k&gt;
          &lt;schedule&gt; SCHED &lt;/schedule&gt;
          &lt;gasPrice&gt; _ =&gt; GPRICE &lt;/gasPrice&gt;
          &lt;origin&gt; _ =&gt; ACCTFROM &lt;/origin&gt;
-         &lt;callDepth&gt; _ =&gt; -1 &lt;/callDepth&gt;
+         &lt;callDepth&gt; _ =&gt; <span class="hljs-number">-1</span> &lt;/callDepth&gt;
          &lt;beneficiary&gt; _ =&gt; CB &lt;/beneficiary&gt;
          &lt;difficulty&gt; _ =&gt; DIFF &lt;/difficulty&gt;
          &lt;number&gt; _ =&gt; NUMB &lt;/number&gt;
@@ -195,11 +195,11 @@
            &lt;nonce&gt; NONCE &lt;/nonce&gt;
            ...
          &lt;/account&gt;
-         &lt;activeAccounts&gt; ACCTS &lt;/activeAccounts&gt;
-      requires ACCTFROM in ACCTS
+         &lt;activeAccounts&gt; ACCTS &lt;/activeAccounts&gt;<span class="hljs-keyword">
+      requires</span> ACCTFROM in ACCTS<span class="hljs-keyword">
 
-    rule &lt;k&gt; runVM(false, ACCTTO, ACCTFROM, _, ARGS, VALUE, GPRICE, GAVAIL, CB, DIFF, NUMB, GLIMIT, TS, FUNC)
-          =&gt; #call ACCTFROM ACCTTO @ String2IeleName(FUNC) (GAVAIL *Int Sgasdivisor &lt; SCHED &gt;) VALUE #toInts(ARGS) false
+    rule</span> &lt;k&gt; runVM(false, ACCTTO, ACCTFROM, _, ARGS, VALUE, GPRICE, GAVAIL, CB, DIFF, NUMB, GLIMIT, TS, FUNC)
+          =&gt; #call ACCTFROM ACCTTO @ String2IeleName(FUNC) (GAVAIL *<span class="hljs-keyword">Int</span> Sgasdivisor &lt; SCHED &gt;) VALUE #toInts(ARGS) false
           ~&gt; #endVM
           ~&gt; #trimAccounts
          ...
@@ -207,75 +207,75 @@
          &lt;schedule&gt; SCHED &lt;/schedule&gt;
          &lt;gasPrice&gt; _ =&gt; GPRICE &lt;/gasPrice&gt;
          &lt;origin&gt; _ =&gt; ACCTFROM &lt;/origin&gt;
-         &lt;callDepth&gt; _ =&gt; -1 &lt;/callDepth&gt;
+         &lt;callDepth&gt; _ =&gt; <span class="hljs-number">-1</span> &lt;/callDepth&gt;
          &lt;beneficiary&gt; _ =&gt; CB &lt;/beneficiary&gt;
          &lt;difficulty&gt; _ =&gt; DIFF &lt;/difficulty&gt;
          &lt;number&gt; _ =&gt; NUMB &lt;/number&gt;
          &lt;gasLimit&gt; _ =&gt; GLIMIT &lt;/gasLimit&gt;
          &lt;timestamp&gt; _ =&gt; TS &lt;/timestamp&gt;
-         &lt;activeAccounts&gt; ACCTS &lt;/activeAccounts&gt;
-      requires ACCTFROM in ACCTS
+         &lt;activeAccounts&gt; ACCTS &lt;/activeAccounts&gt;<span class="hljs-keyword">
+      requires</span> ACCTFROM in ACCTS<span class="hljs-keyword">
 
-    syntax IELECommand ::= &quot;#endVM&quot;
- // -------------------------------
-    rule &lt;k&gt; #exception STATUS ~&gt; #endVM =&gt; #popCallStack ~&gt; #popWorldState ~&gt; #popSubstate ~&gt; STATUS ... &lt;/k&gt;
-         &lt;output&gt; _ =&gt; .Ints &lt;/output&gt;
-    rule &lt;k&gt; #revert OUT       ~&gt; #endVM =&gt; #popCallStack ~&gt; #popWorldState ~&gt; #popSubstate ~&gt; #refund GAVAIL ~&gt; OUT ... &lt;/k&gt;
-         &lt;gas&gt; GAVAIL &lt;/gas&gt;       
+    syntax</span> IELECommand ::= <span class="hljs-string">&quot;#endVM&quot;</span>
+ <span class="hljs-comment">// -------------------------------</span><span class="hljs-keyword">
+    rule</span> &lt;k&gt; #exception STATUS ~&gt; #endVM =&gt; #popCallStack ~&gt; #popWorldState ~&gt; #popSubstate ~&gt; STATUS ... &lt;/k&gt;
+         &lt;output&gt; _ =&gt; .Ints &lt;/output&gt;<span class="hljs-keyword">
+    rule</span> &lt;k&gt; #revert OUT       ~&gt; #endVM =&gt; #popCallStack ~&gt; #popWorldState ~&gt; #popSubstate ~&gt; #refund GAVAIL ~&gt; OUT ... &lt;/k&gt;
+         &lt;gas&gt; GAVAIL &lt;/gas&gt;<span class="hljs-keyword">       
 
-    rule &lt;k&gt; #end ~&gt; #endVM =&gt; #popCallStack ~&gt; #dropWorldState ~&gt; #dropSubstate ~&gt; #refund GAVAIL ~&gt; 0 ... &lt;/k&gt;
-         &lt;gas&gt; GAVAIL &lt;/gas&gt;
+    rule</span> &lt;k&gt; #end ~&gt; #endVM =&gt; #popCallStack ~&gt; #dropWorldState ~&gt; #dropSubstate ~&gt; #refund GAVAIL ~&gt; <span class="hljs-number">0</span> ... &lt;/k&gt;
+         &lt;gas&gt; GAVAIL &lt;/gas&gt;<span class="hljs-keyword">
 
-    syntax KItem ::= &quot;#trimAccounts&quot;
-                   | #trimAccounts(List)
-    rule I:Int ~&gt; #trimAccounts =&gt; #trimAccounts ~&gt; I
-    rule &lt;k&gt; #trimAccounts =&gt; #trimAccounts(Set2List(ACCTS)) ... &lt;/k&gt;
-         &lt;activeAccounts&gt; ACCTS &lt;/activeAccounts&gt;
+    syntax</span> KItem ::= <span class="hljs-string">&quot;#trimAccounts&quot;</span>
+                   | #trimAccounts(List)<span class="hljs-keyword">
+    rule</span> I:<span class="hljs-keyword">Int</span> ~&gt; #trimAccounts =&gt; #trimAccounts ~&gt; I<span class="hljs-keyword">
+    rule</span> &lt;k&gt; #trimAccounts =&gt; #trimAccounts(Set2List(ACCTS)) ... &lt;/k&gt;
+         &lt;activeAccounts&gt; ACCTS &lt;/activeAccounts&gt;<span class="hljs-keyword">
 
-    rule #trimAccounts(.List) =&gt; .
-    rule &lt;k&gt; #trimAccounts((ListItem(ACCT) =&gt; .List) ACCTS) ... &lt;/k&gt;
+    rule</span> #trimAccounts(.List) =&gt; .<span class="hljs-keyword">
+    rule</span> &lt;k&gt; #trimAccounts((ListItem(ACCT) =&gt; .List) ACCTS) ... &lt;/k&gt;
          (&lt;account&gt;
            &lt;acctID&gt; ACCT &lt;/acctID&gt;
-           &lt;balance&gt; 0 &lt;/balance&gt;
+           &lt;balance&gt; <span class="hljs-number">0</span> &lt;/balance&gt;
            &lt;code&gt; #emptyCode &lt;/code&gt;
-           &lt;nonce&gt; 0 &lt;/nonce&gt;
+           &lt;nonce&gt; <span class="hljs-number">0</span> &lt;/nonce&gt;
            ...
-         &lt;/account&gt; =&gt; .Bag)
-    rule &lt;k&gt; #trimAccounts((ListItem(ACCT) =&gt; .List) ACCTS) ... &lt;/k&gt;
+         &lt;/account&gt; =&gt; .Bag)<span class="hljs-keyword">
+    rule</span> &lt;k&gt; #trimAccounts((ListItem(ACCT) =&gt; .List) ACCTS) ... &lt;/k&gt;
          &lt;account&gt;
            &lt;acctID&gt; ACCT &lt;/acctID&gt;
            &lt;balance&gt; BAL &lt;/balance&gt;
            &lt;code&gt; CODE &lt;/code&gt;
            &lt;nonce&gt; NONCE &lt;/nonce&gt;
            ...
-         &lt;/account&gt;
-      requires BAL =/=Int 0 orBool NONCE =/=Int 0 orBool CODE =/=K #emptyCode
+         &lt;/account&gt;<span class="hljs-keyword">
+      requires</span> BAL =/=<span class="hljs-keyword">Int</span> <span class="hljs-number">0</span> orBool NONCE =/=<span class="hljs-keyword">Int</span> <span class="hljs-number">0</span> orBool CODE =/=K #emptyCode<span class="hljs-keyword">
 
-    syntax Ints ::= #toInts(List) [function, klabel(ListToInts), symbol]
- // --------------------------------------------------------------------
-    rule #toInts(.List) =&gt; .Ints
-    rule #toInts(ListItem(I:Int) L) =&gt; I , #toInts(L)
+    syntax</span> Ints ::= #toInts(List) [function, klabel(ListToInts), symbol]
+ <span class="hljs-comment">// --------------------------------------------------------------------</span><span class="hljs-keyword">
+    rule</span> #toInts(.List) =&gt; .Ints<span class="hljs-keyword">
+    rule</span> #toInts(ListItem(I:<span class="hljs-keyword">Int</span>) L) =&gt; I , #toInts(L)<span class="hljs-keyword">
 
-    syntax Ints ::= #toInts(JSONs) [function, klabel(JSONsToInts)]
- // --------------------------------------------------------------------
-    rule #toInts(.JSONs) =&gt; .Ints
-    rule #toInts(S:String, L) =&gt; Bytes2Int(String2Bytes(S), BE, Signed) , #toInts(L)
+    syntax</span> Ints ::= #toInts(JSONs) [function, klabel(JSONsToInts)]
+ <span class="hljs-comment">// --------------------------------------------------------------------</span><span class="hljs-keyword">
+    rule</span> #toInts(.JSONs) =&gt; .Ints<span class="hljs-keyword">
+    rule</span> #toInts(S:<span class="hljs-keyword">String</span>, L) =&gt; Bytes2Int(String2Bytes(S), BE, Signed) , #toInts(L)<span class="hljs-keyword">
 
 
-    syntax List ::= #toList(Ints) [function]
- // ----------------------------------------
-    rule #toList(.Ints) =&gt; .List
-    rule #toList(I , L) =&gt; ListItem(I) #toList(L)
+    syntax</span> List ::= #toList(Ints) [function]
+ <span class="hljs-comment">// ----------------------------------------</span><span class="hljs-keyword">
+    rule</span> #toList(.Ints) =&gt; .List<span class="hljs-keyword">
+    rule</span> #toList(I , L) =&gt; ListItem(I) #toList(L)<span class="hljs-keyword">
 
-    syntax String ::= unparseByteStack(Bytes) [function, symbol]
-    rule unparseByteStack(B::Bytes) =&gt; Bytes2String(B)
+    syntax</span><span class="hljs-keyword"> String</span> ::= unparseByteStack(Bytes) [function, symbol]<span class="hljs-keyword">
+    rule</span> unparseByteStack(B::Bytes) =&gt; Bytes2String(B)<span class="hljs-keyword">
 
-    syntax KItem ::= vmResult(return: List,gas: Int,refund: Int,status: Int,selfdestruct: List,logs: List,AccountsCell, touched: List)
-    syntax KItem ::= extractConfig(GeneratedTopCell) [function, symbol]
- // ----------------------------------------------------------
-    rule extractConfig(&lt;generatedTop&gt;... &lt;schedule&gt; SCHED &lt;/schedule&gt; &lt;output&gt; OUT &lt;/output&gt; &lt;gas&gt; GAVAIL &lt;/gas&gt; &lt;refund&gt; REFUND &lt;/refund&gt; &lt;k&gt; STATUS:Int &lt;/k&gt; &lt;selfDestruct&gt; SD &lt;/selfDestruct&gt; &lt;logData&gt; LOGS &lt;/logData&gt; &lt;accounts&gt; ACCTS &lt;/accounts&gt; ... &lt;/generatedTop&gt;) =&gt; vmResult(#toList(OUT),GAVAIL up/Int Sgasdivisor &lt; SCHED &gt;,REFUND,STATUS,Set2List(SD),LOGS,&lt;accounts&gt; ACCTS &lt;/accounts&gt;, .List)
+    syntax</span> KItem ::= vmResult(return: List,gas:<span class="hljs-keyword"> Int</span>,refund:<span class="hljs-keyword"> Int</span>,status:<span class="hljs-keyword"> Int</span>,selfdestruct: List,logs: List,AccountsCell, touched: List)<span class="hljs-keyword">
+    syntax</span> KItem ::= extractConfig(GeneratedTopCell) [function, symbol]
+ <span class="hljs-comment">// ----------------------------------------------------------</span><span class="hljs-keyword">
+    rule</span> extractConfig(&lt;generatedTop&gt;... &lt;schedule&gt; SCHED &lt;/schedule&gt; &lt;output&gt; OUT &lt;/output&gt; &lt;gas&gt; GAVAIL &lt;/gas&gt; &lt;refund&gt; REFUND &lt;/refund&gt; &lt;k&gt; STATUS:<span class="hljs-keyword">Int</span> &lt;/k&gt; &lt;selfDestruct&gt; SD &lt;/selfDestruct&gt; &lt;logData&gt; LOGS &lt;/logData&gt; &lt;accounts&gt; ACCTS &lt;/accounts&gt; ... &lt;/generatedTop&gt;) =&gt; vmResult(#toList(OUT),GAVAIL up/<span class="hljs-keyword">Int</span> Sgasdivisor &lt; SCHED &gt;,REFUND,STATUS,Set2List(SD),LOGS,&lt;accounts&gt; ACCTS &lt;/accounts&gt;, .List)<span class="hljs-keyword">
 
-endmodule
+endmodule</span>
 </code></pre>
 </body></html></div>
         </main>

@@ -52,7 +52,7 @@
   <a class="logo-link" href="../index.html">
     <img
       class="logo-dark"
-      srcset="../assets/img/k-logo.png"
+      srcset="../assets/img/iele-logo.png"
       alt="K"
       style="height: 48px"
     />
@@ -521,7 +521,7 @@ Otherwise, if the account already exists, the storage is cleared.</li>
          &lt;activeAccounts&gt; ACCTS &lt;/activeAccounts&gt;<span class="hljs-keyword">
       requires</span> notBool ACCT in ACCTS
 </code></pre>
-<pre class="hljs"><code>    rule &lt;k&gt; #loadAccount ACCT =&gt; . ... &lt;/k&gt;
+<pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #loadAccount ACCT =&gt; . ... &lt;/k&gt;
          &lt;activeAccounts&gt; ACCTS (.Set =&gt; SetItem(ACCT)) &lt;/activeAccounts&gt;
          &lt;accounts&gt;
            ( .Bag
@@ -531,8 +531,8 @@ Otherwise, if the account already exists, the storage is cleared.</li>
              &lt;/account&gt;
            )
            ...
-         &lt;/accounts&gt;
-      requires notBool ACCT in ACCTS
+         &lt;/accounts&gt;<span class="hljs-keyword">
+      requires</span> notBool ACCT in ACCTS
 </code></pre>
 <ul>
 <li><code>#lookupStorage</code> loads the <code>&lt;storage&gt;</code> cell with the storage value for a particular key in the account.</li>
@@ -547,13 +547,13 @@ Otherwise, if the account already exists, the storage is cleared.</li>
          &lt;/account&gt;<span class="hljs-keyword">
       requires</span> INDEX in_keys(STORAGE)
 </code></pre>
-<pre class="hljs"><code>    rule &lt;k&gt; #lookupStorage(ACCT, INDEX) =&gt; . ... &lt;/k&gt;
+<pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #lookupStorage(ACCT, INDEX) =&gt; . ... &lt;/k&gt;
          &lt;account&gt;
            &lt;acctID&gt;  ACCT                              &lt;/acctID&gt;
-           &lt;storage&gt; STORAGE =&gt; STORAGE [ INDEX &lt;- 0 ] &lt;/storage&gt;
+           &lt;storage&gt; STORAGE =&gt; STORAGE [ INDEX &lt;- <span class="hljs-number">0</span> ] &lt;/storage&gt;
            ...
-         &lt;/account&gt;
-      requires notBool INDEX in_keys(STORAGE)
+         &lt;/account&gt;<span class="hljs-keyword">
+      requires</span> notBool INDEX in_keys(STORAGE)
 </code></pre>
 <ul>
 <li><code>#lookupCode</code> loads the <code>&lt;code&gt;</code> cell with the code for a particular account.</li>
@@ -981,16 +981,16 @@ Executing the INVALID instruction results in an exception.</p>
     rule</span> &lt;k&gt; #exec REG = call @iele.msize    ( .Ints ) =&gt; #load REG (MU &lt;&lt;<span class="hljs-keyword">Int</span> <span class="hljs-number">3</span>) ... &lt;/k&gt; &lt;peakMemory&gt; MU &lt;/peakMemory&gt;<span class="hljs-keyword">
     rule</span> &lt;k&gt; #exec REG = call @iele.codesize ( .Ints ) =&gt; #load REG SIZE         ... &lt;/k&gt; &lt;programSize&gt; SIZE &lt;/programSize&gt;
 </code></pre>
-<pre class="hljs"><code>    rule &lt;k&gt; #exec REG = call @iele.blockhash ( N ) =&gt; #load REG #if N &gt;=Int HI orBool HI -Int 256 &gt;Int N orBool N &lt;Int 0 #then 0 #else #parseHexWord(Keccak256(Int2String(N))) #fi ... &lt;/k&gt; &lt;number&gt; HI &lt;/number&gt; &lt;mode&gt; VMTESTS &lt;/mode&gt;
-    rule &lt;k&gt; #exec REG = call @iele.blockhash ( N ) =&gt; #load REG #blockhash(HASHES, N, HI -Int 1, 0) ... &lt;/k&gt; &lt;number&gt; HI &lt;/number&gt; &lt;blockhash&gt; HASHES &lt;/blockhash&gt; &lt;mode&gt; NORMAL &lt;/mode&gt;
+<pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #exec REG = call @iele.blockhash ( N ) =&gt; #load REG #if N &gt;=<span class="hljs-keyword">Int</span> HI orBool HI -<span class="hljs-keyword">Int</span> <span class="hljs-number">256</span> &gt;<span class="hljs-keyword">Int</span> N orBool N &lt;<span class="hljs-keyword">Int</span> <span class="hljs-number">0</span> #then <span class="hljs-number">0</span> #else #parseHexWord(Keccak256(Int2String(N))) #fi ... &lt;/k&gt; &lt;number&gt; HI &lt;/number&gt; &lt;mode&gt; VMTESTS &lt;/mode&gt;<span class="hljs-keyword">
+    rule</span> &lt;k&gt; #exec REG = call @iele.blockhash ( N ) =&gt; #load REG #blockhash(HASHES, N, HI -<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>, <span class="hljs-number">0</span>) ... &lt;/k&gt; &lt;number&gt; HI &lt;/number&gt; &lt;blockhash&gt; HASHES &lt;/blockhash&gt; &lt;mode&gt; NORMAL &lt;/mode&gt;<span class="hljs-keyword">
 
-    syntax Int ::= #blockhash ( List , Int , Int , Int ) [function]
- // ---------------------------------------------------------------
-    rule #blockhash(_, N, HI, _) =&gt; 0 requires N &gt;Int HI orBool N &lt;Int 0
-    rule #blockhash(_, _, _, 256) =&gt; 0
-    rule #blockhash(ListItem(0) _, _, _, _) =&gt; 0
-    rule #blockhash(ListItem(H) _, N, N, _) =&gt; H
-    rule #blockhash(ListItem(_) L, N, HI, A) =&gt; #blockhash(L, N, HI -Int 1, A +Int 1) [owise]
+    syntax</span><span class="hljs-keyword"> Int</span> ::= #blockhash ( List ,<span class="hljs-keyword"> Int</span> ,<span class="hljs-keyword"> Int</span> ,<span class="hljs-keyword"> Int</span> ) [function]
+ <span class="hljs-comment">// ---------------------------------------------------------------</span><span class="hljs-keyword">
+    rule</span> #blockhash(_, N, HI, _) =&gt; <span class="hljs-number">0</span><span class="hljs-keyword"> requires</span> N &gt;<span class="hljs-keyword">Int</span> HI orBool N &lt;<span class="hljs-keyword">Int</span> <span class="hljs-number">0</span><span class="hljs-keyword">
+    rule</span> #blockhash(_, _, _, <span class="hljs-number">256</span>) =&gt; <span class="hljs-number">0</span><span class="hljs-keyword">
+    rule</span> #blockhash(ListItem(<span class="hljs-number">0</span>) _, _, _, _) =&gt; <span class="hljs-number">0</span><span class="hljs-keyword">
+    rule</span> #blockhash(ListItem(H) _, N, N, _) =&gt; H<span class="hljs-keyword">
+    rule</span> #blockhash(ListItem(_) L, N, HI, A) =&gt; #blockhash(L, N, HI -<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>, A +<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>) [owise]
 </code></pre>
 <h3>Branch and Local Call</h3>
 <p>The <code>br</code> instruction jumps to a specified label, either unconditionally, or if its argument is nonzero.</p>
