@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+<meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+/>
+<meta
+  name="description"
+  content="Design and implement your programming language and software analysis tools with mathematical rigor."
+/>
+<meta name="keywords" content="runtime, verification, rv, k" />
+<meta name="author" content="IELE Semantics | Runtime Verification Inc" />
+<meta name="robots" content="index, follow" />
+
+<!--favicon icon-->
+<link rel="icon" type="image/png" href="../assets/img/favicon.ico" />
+
+<title>IELE Semantics | Runtime Verification Inc</title>
+
+<!-- <base href="/k/" /> -->
+
+<!--web fonts-->
+<link
+  href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800"
+  rel="stylesheet"
+/>
+<link
+  href="https://fonts.googleapis.com/css?family=Lora:400i"
+  rel="stylesheet"
+/>
+
+<link
+  href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css"
+  rel="stylesheet"
+/>
+
+<link href="../assets/css/index.css" rel="stylesheet" />
+
+<!--[if (gt IE 9) |!(IE)]><!-->
+<!--<link rel="stylesheet" href="/assets/vendor/custom-nav/css/effects/fade-menu.css"/>-->
+<!-- <link rel="stylesheet" href="../assets/k/vl-nav/css/effects/slide-menu.css" /> -->
+<!--<![endif]-->
+
+  </head>
+
+  <body>
+<header
+  class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar"
+>
+  <a class="logo-link" href="../index.html">
+    <img
+      class="logo-dark"
+      srcset="../assets/img/k-logo.png"
+      alt="K"
+      style="height: 48px"
+    />
+    Semantic Framework
+  </a>
+  <ul class="navbar-nav ml-md-auto">
+    <li class="nav-item">
+      <a
+        class="nav-link pl-2 pr-1 mx-1 py-3 my-n2"
+        href="https://github.com/runtimeverification/iele-semantics"
+        target="_blank"
+        rel="noopener"
+        aria-label="GitHub"
+      >
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  </ul>
+  <a
+    class="btn btn-rv-blue d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"
+    href="../downloads"
+    >Download</a
+  >
+</header>
+
+
+    <div class="container-fluid">
+      <div class="row flex-xl-nowrap">
+<div class="col-12 col-md-3 col-xl-2 bd-sidebar mb-3">
+  <form
+    role="search"
+    class="bd-search d-flex align-items-center justify-content-between"
+  >
+    <input
+      type="search"
+      class="form-control"
+      placeholder="Search..."
+      aria-label="Search for..."
+      autocomplete="false"
+      id="search-box"
+    />
+    <button
+      class="btn bd-search-docs-toggle d-md-none p-0 ml-3 collapsed"
+      type="button"
+      aria-label="Toggle docs navigation"
+      style="font-size: 1.4rem"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+  </form>
+  <nav class="collapse bd-links" aria-label="Main navigation">
+    <div class="bd-toc-item">
+      <a class="bd-toc-link" href="../">Homepage</a>
+      <a class="bd-toc-link" href="../INSTALL">Install</a>
+      <a class="bd-toc-link" href="../Design">Design</a>
+    </div>
+  </nav>
+</div>
+
+        <main
+          class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content"
+          role="main"
+        >
+          <div class="markdown-preview"><html><head></head><body><h1>IELE Testing</h1>
+<p>Here we define a test harness for the new IELE VM.
+Actual execution of IELE is defined in <a href="iele/">the IELE file</a>.</p>
+<pre class="hljs"><code><span class="hljs-keyword">requires</span> <span class="hljs-string">&quot;iele.md&quot;</span><span class="hljs-keyword">
+requires</span> <span class="hljs-string">&quot;iele-binary.md&quot;</span>
+</code></pre>
+<pre class="hljs"><code>requires &quot;iele-node.md&quot;
+</code></pre>
+<pre class="hljs"><code><span class="hljs-keyword">module</span> IELE-TESTING<span class="hljs-keyword">
+    imports</span> IELE<span class="hljs-keyword">
+    imports</span> IELE-BINARY<span class="hljs-keyword">
+    imports</span> K-REFLECTION
+</code></pre>
+<pre class="hljs"><code>    imports IELE-NODE
+</code></pre>
+<p>A IELE simulation is a list of IELE commands.
+Some IELE commands take a specification of IELE state (eg. for an account or transaction).</p>
+<pre class="hljs"><code>    syntax IELESimulation ::= &quot;.IELESimulation&quot;
+                                | IELECommand IELESimulation
+ // --------------------------------------------------------
+    rule .IELESimulation =&gt; .
+    rule IEC:IELECommand IES:IELESimulation =&gt; IEC ~&gt; IES
+
+    syntax IELESimulation ::= JSON
+ // ------------------------------
+    rule &lt;k&gt; JSONINPUT:JSON =&gt; run JSONINPUT success .IELESimulation &lt;/k&gt;
+</code></pre>
+<p>For verification purposes, it&apos;s much easier to specify a program in terms of its op-codes and not the hex-encoding that the tests use.
+To do so, we&apos;ll extend sort <code>JSON</code> with some IELE specific syntax, and provide a &quot;pretti-fication&quot; to the nicer input form.</p>
+<pre class="hljs"><code>    syntax JSON ::= Int | WordStack | Bytes | Map | SubstateLogEntry | Account
+    syntax JSONKey ::= Int
+ // ------------------------------------------------------------------
+
+    syntax JSONs ::= #sortJSONList ( JSONs )            [function]
+                      | #sortJSONList ( JSONs , JSONs ) [function, klabel(#sortJSONListAux)]
+ // ----------------------------------------------------------------------------------------------
+    rule #sortJSONList(JS) =&gt; #sortJSONList(JS, .JSONs)
+    rule #sortJSONList(.JSONs, LS)            =&gt; LS
+    rule #sortJSONList(((KEY : VAL:JSON) , REST), LS) =&gt; #insertJSONKey((KEY : VAL), #sortJSONList(REST, LS))
+
+    syntax JSONs ::= #insertJSONKey ( JSON , JSONs ) [function]
+ // -----------------------------------------------------------------
+    rule #insertJSONKey( JS , .JSONs ) =&gt; JS , .JSONs
+    rule #insertJSONKey( (KEY : VAL) , ((KEY&apos; : VAL&apos;) , REST) ) =&gt; (KEY : VAL)   , (KEY&apos; : VAL&apos;)              , REST  requires KEY &lt;String KEY&apos;
+    rule #insertJSONKey( (KEY : VAL) , ((KEY&apos; : VAL&apos;) , REST) ) =&gt; (KEY&apos; : VAL&apos;) , #insertJSONKey((KEY : VAL) , REST) requires KEY &gt;=String KEY&apos;
+
+    syntax Bool ::= #isSorted ( JSONs ) [function]
+ // -------------------------------------------------
+    rule #isSorted( .JSONs ) =&gt; true
+    rule #isSorted( KEY : _:JSON )   =&gt; true
+    rule #isSorted( (KEY : _) , (KEY&apos; : VAL) , REST ) =&gt; KEY &lt;=String KEY&apos; andThenBool #isSorted((KEY&apos; : VAL) , REST)
+</code></pre>
+<h3>Driving Execution</h3>
+<ul>
+<li><code>start</code> places <code>#next</code> on the <code>&lt;k&gt;</code> cell so that execution of the loaded state begin.</li>
+<li><code>flush</code> places <code>#finalize</code> on the <code>&lt;k&gt;</code> cell once it sees <code>#end</code> in the <code>&lt;k&gt;</code> cell, clearing any exceptions it finds.</li>
+</ul>
+<pre class="hljs"><code>    syntax IELECommand ::= &quot;start&quot;
+ // ------------------------------
+    rule &lt;mode&gt; NORMAL     &lt;/mode&gt; &lt;k&gt; start =&gt; #loads #regRange(#sizeRegs(VALUES)) VALUES ~&gt; #execute    ... &lt;/k&gt; &lt;callData&gt; VALUES &lt;/callData&gt; &lt;fid&gt; _ =&gt; deposit &lt;/fid&gt;
+    rule &lt;mode&gt; VMTESTS    &lt;/mode&gt; &lt;k&gt; start =&gt; #loads #regRange(#sizeRegs(VALUES)) VALUES ~&gt; #execute    ... &lt;/k&gt; &lt;callData&gt; VALUES &lt;/callData&gt; &lt;fid&gt; _ =&gt; deposit &lt;/fid&gt;
+ // rule &lt;mode&gt; GASANALYZE &lt;/mode&gt; &lt;k&gt; start =&gt; #loads #regRange(#sizeRegs(VALUES)) VALUES ~&gt; #gasAnalyze ... &lt;/k&gt; &lt;callData&gt; VALUES &lt;/callData&gt; &lt;fid&gt; _ =&gt; deposit &lt;/fid&gt;
+
+    syntax IELECommand ::= &quot;flush&quot;
+ // ------------------------------
+    rule &lt;k&gt; #end       ~&gt; flush =&gt; #finalizeTx(false)               ... &lt;/k&gt;
+    rule &lt;k&gt; #exception CODE ~&gt; flush =&gt; #finalizeTx(false) ~&gt; #exception CODE ... &lt;/k&gt;
+</code></pre>
+<ul>
+<li><code>startTx</code> computes the sender of the transaction, and places loadTx on the <code>k</code> cell.</li>
+<li><code>loadTx(_)</code> loads the next transaction to be executed into the current state.</li>
+<li><code>#adjustGas</code> fakes the gas usage of the transaction since the EVM-to-IELE conversion does not preserve gas usage.</li>
+<li><code>finishTx</code> is a place-holder for performing necessary cleanup after a transaction.</li>
+</ul>
+<pre class="hljs"><code>    syntax IELECommand ::= &quot;startTx&quot;
+ // --------------------------------
+    rule &lt;k&gt; startTx =&gt; #finalizeBlock ... &lt;/k&gt;
+         &lt;txPending&gt; .List &lt;/txPending&gt;
+
+    rule &lt;k&gt; startTx =&gt; loadTx(TS) ... &lt;/k&gt;
+         &lt;txPending&gt; ListItem(TXID:Int) ... &lt;/txPending&gt;
+         &lt;message&gt;
+           &lt;msgID&gt;      TXID &lt;/msgID&gt;
+           &lt;txNonce&gt;    TN   &lt;/txNonce&gt;
+           &lt;txGasPrice&gt; TP   &lt;/txGasPrice&gt;
+           &lt;txGasLimit&gt; TG   &lt;/txGasLimit&gt;
+           &lt;sendto&gt;     TT   &lt;/sendto&gt;
+           &lt;value&gt;      TV   &lt;/value&gt;
+           &lt;from&gt;       TS   &lt;/from&gt;
+           &lt;data&gt;       DATA &lt;/data&gt;
+           ...
+         &lt;/message&gt;
+
+    syntax IELECommand ::= loadTx ( Int )
+ // -------------------------------------
+    rule &lt;k&gt; loadTx(ACCTFROM)
+          =&gt; #fun(CONTRACT =&gt;
+             #checkContract CONTRACT
+          ~&gt; #create ACCTFROM #newAddr(ACCTFROM, NONCE) ((GLIMIT -Int G0(SCHED, CODE, ARGS))*Int Sgasdivisor &lt; SCHED &gt;) VALUE CONTRACT ARGS
+          ~&gt; #codeDeposit #newAddr(ACCTFROM, NONCE) #sizeWordStack(CODE) CONTRACT %0 %1 true ~&gt; #adjustGas ~&gt; #finalizeTx(false) ~&gt; startTx)(#if #isValidContract(CODE) #then #dasmContract(CODE, Main) #else #illFormed #fi)
+         ...
+         &lt;/k&gt;
+         &lt;schedule&gt; SCHED &lt;/schedule&gt;
+         &lt;gasPrice&gt; _ =&gt; GPRICE &lt;/gasPrice&gt;
+         &lt;origin&gt; _ =&gt; ACCTFROM &lt;/origin&gt;
+         &lt;callDepth&gt; _ =&gt; -1 &lt;/callDepth&gt;
+         &lt;gas&gt; _ =&gt; 0 &lt;/gas&gt;
+         &lt;refund&gt; _ =&gt; 0 &lt;/refund&gt;
+         &lt;logData&gt; _ =&gt; .List &lt;/logData&gt;
+         &lt;txPending&gt; ListItem(TXID:Int) ... &lt;/txPending&gt;
+         &lt;message&gt;
+           &lt;msgID&gt;      TXID     &lt;/msgID&gt;
+           &lt;txGasPrice&gt; GPRICE   &lt;/txGasPrice&gt;
+           &lt;txGasLimit&gt; GLIMIT   &lt;/txGasLimit&gt;
+           &lt;sendto&gt;     .Account &lt;/sendto&gt;
+           &lt;value&gt;      VALUE    &lt;/value&gt;
+           &lt;data&gt;       CODE     &lt;/data&gt;
+           &lt;args&gt;       ARGS     &lt;/args&gt;
+           ...
+         &lt;/message&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCTFROM &lt;/acctID&gt;
+           &lt;balance&gt; BAL =&gt; BAL -Int (GLIMIT *Int GPRICE) &lt;/balance&gt;
+           &lt;nonce&gt; NONCE =&gt; NONCE +Int 1 &lt;/nonce&gt;
+           ...
+         &lt;/account&gt;
+
+    rule &lt;k&gt; loadTx(ACCTFROM)
+          =&gt; #call ACCTFROM ACCTTO @ FUNC ((GLIMIT -Int G0(SCHED, IeleName2String(FUNC), ARGS))*Int Sgasdivisor &lt; SCHED &gt;) VALUE ARGS false
+          ~&gt; #finishTx ~&gt; #adjustGas ~&gt; #finalizeTx(false) ~&gt; startTx
+         ...
+         &lt;/k&gt;
+         &lt;schedule&gt; SCHED &lt;/schedule&gt;
+         &lt;gasPrice&gt; _ =&gt; GPRICE &lt;/gasPrice&gt;
+         &lt;origin&gt; _ =&gt; ACCTFROM &lt;/origin&gt;
+         &lt;callDepth&gt; _ =&gt; -1 &lt;/callDepth&gt;
+         &lt;gas&gt; _ =&gt; 0 &lt;/gas&gt;
+         &lt;refund&gt; _ =&gt; 0 &lt;/refund&gt;
+         &lt;logData&gt; _ =&gt; .List &lt;/logData&gt;
+         &lt;txPending&gt; ListItem(TXID:Int) ... &lt;/txPending&gt;
+         &lt;message&gt;
+           &lt;msgID&gt;      TXID   &lt;/msgID&gt;
+           &lt;txGasPrice&gt; GPRICE &lt;/txGasPrice&gt;
+           &lt;txGasLimit&gt; GLIMIT &lt;/txGasLimit&gt;
+           &lt;sendto&gt;     ACCTTO &lt;/sendto&gt;
+           &lt;value&gt;      VALUE  &lt;/value&gt;
+           &lt;args&gt;       ARGS   &lt;/args&gt;
+           &lt;func&gt;       FUNC   &lt;/func&gt;
+           ...
+         &lt;/message&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCTFROM &lt;/acctID&gt;
+           &lt;balance&gt; BAL =&gt; BAL -Int (GLIMIT *Int GPRICE) &lt;/balance&gt;
+           &lt;nonce&gt; NONCE =&gt; NONCE +Int 1 &lt;/nonce&gt;
+           ...
+         &lt;/account&gt;
+      requires ACCTTO =/=K .Account
+
+    syntax IELECommand ::= &quot;#adjustGas&quot;
+ // -----------------------------------
+    rule &lt;k&gt; #adjustGas =&gt; . ... &lt;/k&gt;
+         &lt;checkGas&gt; false &lt;/checkGas&gt;
+         &lt;gas&gt; _ =&gt; GLIMIT -Int GUSED &lt;/gas&gt;
+         &lt;refund&gt; _ =&gt; 0 &lt;/refund&gt;
+         &lt;gasUsed&gt; GUSED &lt;/gasUsed&gt;
+         &lt;txPending&gt; ListItem(TXID:Int) ... &lt;/txPending&gt;
+         &lt;message&gt;
+           &lt;msgID&gt; TXID &lt;/msgID&gt;
+           &lt;txGasLimit&gt; GLIMIT &lt;/txGasLimit&gt;
+           ...
+         &lt;/message&gt;
+
+    rule &lt;k&gt; #adjustGas =&gt; . ... &lt;/k&gt; &lt;checkGas&gt; true &lt;/checkGas&gt; &lt;gas&gt; GAVAIL =&gt; GAVAIL up/Int Sgasdivisor &lt; SCHED &gt; &lt;/gas&gt; &lt;schedule&gt; SCHED &lt;/schedule&gt;
+    rule STATUS:Int ~&gt; #adjustGas =&gt; #load %0 STATUS ~&gt; #adjustGas
+
+    syntax IELECommand ::= &quot;#finishTx&quot;
+ // ----------------------------------
+    rule &lt;k&gt; #exception STATUS ~&gt; #finishTx =&gt; #popCallStack ~&gt; #popWorldState ~&gt; #popSubstate ~&gt; #load %0 STATUS ... &lt;/k&gt;
+    rule &lt;k&gt; #revert STATUS    ~&gt; #finishTx =&gt; #popCallStack ~&gt; #popWorldState ~&gt; #popSubstate ~&gt; #refund GAVAIL ~&gt; #load %0 STATUS ... &lt;/k&gt; &lt;gas&gt; GAVAIL &lt;/gas&gt;       
+
+    rule &lt;k&gt; #end ~&gt; #finishTx =&gt; #popCallStack ~&gt; #dropWorldState ~&gt; #dropSubstate ~&gt; #refund GAVAIL ~&gt; #load %0 0 ... &lt;/k&gt;
+         &lt;gas&gt; GAVAIL &lt;/gas&gt;
+         &lt;txPending&gt; ListItem(TXID:Int) ... &lt;/txPending&gt;
+         &lt;message&gt;
+           &lt;msgID&gt;  TXID &lt;/msgID&gt;
+           &lt;sendto&gt; TT   &lt;/sendto&gt;
+           ...
+         &lt;/message&gt;
+      requires TT =/=K .Account
+</code></pre>
+<ul>
+<li><code>#finalizeBlock</code> is used to signal that block finalization procedures should take place (after transactions have executed).</li>
+<li><code>#rewardOmmers(_)</code> pays out the reward to uncle blocks so that blocks are orphaned less often.</li>
+</ul>
+<pre class="hljs"><code>    syntax IELECommand ::= &quot;#finalizeBlock&quot;
+ // ---------------------------------------
+    rule &lt;k&gt; #finalizeBlock =&gt; . ... &lt;/k&gt;
+         &lt;schedule&gt; SCHED &lt;/schedule&gt;
+         &lt;beneficiary&gt; MINER &lt;/beneficiary&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; MINER &lt;/acctID&gt;
+           &lt;balance&gt; MINBAL =&gt; MINBAL +Int Rb &lt; SCHED &gt; &lt;/balance&gt;
+           ...
+         &lt;/account&gt;
+
+    rule &lt;k&gt; (.K =&gt; #loadAccount MINER) ~&gt; #finalizeBlock ... &lt;/k&gt;
+         &lt;beneficiary&gt; MINER &lt;/beneficiary&gt;
+         &lt;activeAccounts&gt; ACCTS &lt;/activeAccounts&gt;
+      requires notBool MINER in ACCTS
+</code></pre>
+<ul>
+<li><code>exception</code> only clears from the <code>&lt;k&gt;</code> cell if there is an exception preceding it.</li>
+<li><code>failure_</code> holds the name of a test that failed if a test does fail.</li>
+</ul>
+<pre class="hljs"><code>    syntax IELECommand ::= &quot;exception&quot; | &quot;failure&quot; String | &quot;success&quot;
+ // -----------------------------------------------------------------
+    rule &lt;k&gt; #exception _ ~&gt; exception =&gt; . ... &lt;/k&gt;
+    rule &lt;k&gt; success =&gt; . ... &lt;/k&gt; &lt;exit-code&gt; _ =&gt; 0 &lt;/exit-code&gt;
+    rule failure _ =&gt; .
+</code></pre>
+<h3>Running Tests</h3>
+<ul>
+<li><code>run</code> runs a given set of IELE tests (from the test-set).</li>
+</ul>
+<p>Note that <code>TEST</code> is sorted here so that key <code>&quot;network&quot;</code> comes before key <code>&quot;pre&quot;</code>.</p>
+<pre class="hljs"><code>    syntax IELECommand ::= &quot;run&quot; JSON
+ // ---------------------------------
+    rule run { .JSONs } =&gt; .
+    rule run { TESTID : { TEST:JSONs } , TESTS }
+      =&gt; run ( TESTID : { #sortJSONList(TEST) } )
+      ~&gt; #if #hasPost?( { TEST } ) #then .K #else exception #fi
+      ~&gt; clear
+      ~&gt; run { TESTS }
+
+    syntax Bool ::= &quot;#hasPost?&quot; &quot;(&quot; JSON &quot;)&quot; [function]
+ // ---------------------------------------------------
+    rule #hasPost? ({ .JSONs }) =&gt; false
+    rule #hasPost? ({ (KEY:String) : _ , REST }) =&gt; (KEY in #postKeys) orBool #hasPost? ({ REST })
+</code></pre>
+<ul>
+<li><code>#loadKeys</code> are all the JSON nodes which should be considered as loads before execution.</li>
+</ul>
+<pre class="hljs"><code>    syntax Set ::= &quot;#loadKeys&quot; [function]
+ // -------------------------------------
+    rule #loadKeys =&gt; ( SetItem(&quot;env&quot;) SetItem(&quot;pre&quot;) SetItem(&quot;blockHeader&quot;) SetItem(&quot;transactions&quot;) SetItem(&quot;uncleHeaders&quot;) SetItem(&quot;network&quot;) SetItem(&quot;blockhashes&quot;) SetItem(&quot;checkGas&quot;) )
+
+    rule run TESTID : { KEY : (VAL:JSON) , REST } =&gt; load KEY : VAL ~&gt; run TESTID : { REST } requires KEY in #loadKeys
+
+    rule run TESTID : { &quot;blocks&quot; : [ { KEY : VAL:JSON , REST1 =&gt; REST1 }, .JSONs ] , ( REST2 =&gt; KEY : VAL , REST2 ) }
+    rule run TESTID : { &quot;blocks&quot; : [ { .JSONs }, .JSONs ] , REST } =&gt; run TESTID : { REST }
+</code></pre>
+<ul>
+<li><code>#execKeys</code> are all the JSON nodes which should be considered for execution (between loading and checking).</li>
+</ul>
+<pre class="hljs"><code>    syntax Set ::= &quot;#execKeys&quot; [function]
+ // -------------------------------------
+    rule #execKeys =&gt; ( SetItem(&quot;exec&quot;) SetItem(&quot;lastblockhash&quot;) )
+
+    rule run TESTID : { KEY : (VAL:JSON) , NEXT , REST } =&gt; run TESTID : { NEXT , KEY : VAL , REST } requires KEY in #execKeys
+
+    rule run TESTID : { &quot;exec&quot; : (EXEC:JSON) } =&gt; load &quot;exec&quot; : EXEC ~&gt; start ~&gt; flush
+    rule run TESTID : { &quot;lastblockhash&quot; : (HASH:String) } =&gt; startTx
+    rule run TESTID : { .JSONs } =&gt; startTx
+</code></pre>
+<ul>
+<li><code>#postKeys</code> are a subset of <code>#checkKeys</code> which correspond to post-state account checks.</li>
+<li><code>#checkKeys</code> are all the JSON nodes which should be considered as checks after execution.</li>
+</ul>
+<pre class="hljs"><code>    syntax Set ::= &quot;#postKeys&quot; [function] | &quot;#allPostKeys&quot; [function] | &quot;#checkKeys&quot; [function]
+ // -------------------------------------------------------------------------------------------
+    rule #postKeys    =&gt; ( SetItem(&quot;post&quot;) SetItem(&quot;postState&quot;) )
+    rule #allPostKeys =&gt; ( #postKeys SetItem(&quot;expect&quot;) SetItem(&quot;export&quot;) SetItem(&quot;expet&quot;) )
+    rule #checkKeys   =&gt; ( #allPostKeys SetItem(&quot;logs&quot;) SetItem(&quot;callcreates&quot;) SetItem(&quot;out&quot;) SetItem(&quot;gas&quot;)
+                           SetItem(&quot;genesisBlockHeader&quot;) SetItem(&quot;results&quot;)
+                         )
+
+    rule run TESTID : { KEY : (VAL:JSON) , REST } =&gt; run TESTID : { REST } ~&gt; check TESTID : { &quot;post&quot; : VAL } requires KEY in #allPostKeys
+    rule run TESTID : { KEY : (VAL:JSON) , REST } =&gt; run TESTID : { REST } ~&gt; check TESTID : { KEY    : VAL } requires KEY in #checkKeys andBool notBool KEY in #allPostKeys
+</code></pre>
+<ul>
+<li><code>#discardKeys</code> are all the JSON nodes in the tests which should just be ignored.</li>
+</ul>
+<pre class="hljs"><code>    syntax Set ::= &quot;#discardKeys&quot; [function]
+ // ----------------------------------------
+    rule #discardKeys =&gt; ( SetItem(&quot;//&quot;) SetItem(&quot;_info&quot;) SetItem(&quot;rlp&quot;) )
+
+    rule run TESTID : { KEY : _:JSON , REST } =&gt; run TESTID : { REST } requires KEY in #discardKeys
+</code></pre>
+<h2>State Manipulation</h2>
+<h3>Clearing State</h3>
+<ul>
+<li><code>clear</code> clears all the execution state of the machine.</li>
+</ul>
+<pre class="hljs"><code>    syntax IELECommand ::= &quot;clear&quot;
+ // ------------------------------
+    rule &lt;k&gt; clear =&gt; . ... &lt;/k&gt;
+         &lt;schedule&gt; _ =&gt; DEFAULT &lt;/schedule&gt;
+         (&lt;iele&gt; _ &lt;/iele&gt; =&gt; &lt;iele&gt; ... .Bag &lt;/iele&gt;)
+
+</code></pre>
+<h3>Loading State</h3>
+<ul>
+<li><code>mkAcct_</code> creates an account with the supplied ID (assuming it&apos;s already been chopped to 160 bits).</li>
+</ul>
+<pre class="hljs"><code>    syntax IELECommand ::= &quot;mkAcct&quot; Int
+ // -----------------------------------
+    rule &lt;k&gt; mkAcct ACCT =&gt; #loadAccount ACCT ... &lt;/k&gt;
+</code></pre>
+<ul>
+<li><code>load</code> loads an account or transaction into the world state.</li>
+</ul>
+<pre class="hljs"><code>    syntax IELECommand ::= &quot;load&quot; JSON
+ // ----------------------------------
+    rule load DATA : { .JSONs } =&gt; .
+    rule load DATA : { KEY : VALUE:JSON , REST } =&gt; load DATA : { KEY : VALUE } ~&gt; load DATA : { REST }
+      requires REST =/=K .JSONs andBool DATA =/=String &quot;transactions&quot;
+
+    rule load DATA : [ .JSONs ] =&gt; .
+    rule load DATA : [ { TEST } , REST ] =&gt; load DATA : { TEST } ~&gt; load DATA : [ REST ]
+</code></pre>
+<p>Here we perform pre-proccesing on account data which allows &quot;pretty&quot; specification of input.</p>
+<pre class="hljs"><code>    rule load &quot;pre&quot; : { (ACCTID:String) : ACCT } =&gt; mkAcct #parseAddr(ACCTID) ~&gt; load &quot;account&quot; : { ACCTID : ACCT }
+    rule load &quot;account&quot; : { ACCTID: { KEY : VALUE:JSON , REST } } =&gt; load &quot;account&quot; : { ACCTID : { KEY : VALUE } } ~&gt; load &quot;account&quot; : { ACCTID : { REST } } requires REST =/=K .JSONs
+
+    rule load &quot;account&quot; : { ((ACCTID:String) =&gt; #parseAddr(ACCTID)) : ACCT }
+    rule load &quot;account&quot; : { (ACCT:Int) : { &quot;balance&quot; : ((VAL:String)         =&gt; #parseWord(VAL)) } }
+    rule load &quot;account&quot; : { (ACCT:Int) : { &quot;nonce&quot;   : ((VAL:String)         =&gt; #parseWord(VAL)) } }
+    rule load &quot;account&quot; : { (ACCT:Int) : { &quot;code&quot;    : ((CODE:String)        =&gt; #parseByteStack(CODE)) } }
+    rule load &quot;account&quot; : { (ACCT:Int) : { &quot;storage&quot; : ({ STORAGE:JSONs } =&gt; #parseMap({ STORAGE })) } }
+
+</code></pre>
+<p>The individual fields of the accounts are dealt with here.</p>
+<pre class="hljs"><code>    rule &lt;k&gt; load &quot;account&quot; : { ACCT : { &quot;balance&quot; : (BAL:Int) } } =&gt; . ... &lt;/k&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCT &lt;/acctID&gt;
+           &lt;balance&gt; _ =&gt; BAL &lt;/balance&gt;
+           ...
+         &lt;/account&gt;
+
+    rule &lt;k&gt; load &quot;account&quot; : { ACCT : { &quot;code&quot; : (CODE:WordStack) } } =&gt; . ... &lt;/k&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCT &lt;/acctID&gt;
+           &lt;code&gt; _ =&gt; #dasmContract(CODE, Main) &lt;/code&gt;
+           ...
+         &lt;/account&gt;
+
+    rule &lt;k&gt; load &quot;account&quot; : { ACCT : { &quot;nonce&quot; : (NONCE:Int) } } =&gt; . ... &lt;/k&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCT &lt;/acctID&gt;
+           &lt;nonce&gt; _ =&gt; NONCE &lt;/nonce&gt;
+           ...
+         &lt;/account&gt;
+
+    rule &lt;k&gt; load &quot;account&quot; : { ACCT : { &quot;storage&quot; : (STORAGE:Map) } } =&gt; . ... &lt;/k&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCT &lt;/acctID&gt;
+           &lt;storage&gt; _ =&gt; STORAGE &lt;/storage&gt;
+           ...
+         &lt;/account&gt;
+</code></pre>
+<p>Here we load the environmental information.</p>
+<pre class="hljs"><code>    rule load &quot;env&quot; : { KEY : ((VAL:String) =&gt; #parseWord(VAL)) }
+      requires KEY in (SetItem(&quot;currentTimestamp&quot;) SetItem(&quot;currentGasLimit&quot;) SetItem(&quot;currentNumber&quot;) SetItem(&quot;currentDifficulty&quot;))
+    rule load &quot;env&quot; : { KEY : ((VAL:String) =&gt; #parseHexWord(VAL)) }
+      requires KEY in (SetItem(&quot;currentCoinbase&quot;) SetItem(&quot;previousHash&quot;))
+ // ----------------------------------------------------------------------
+    rule &lt;k&gt; load &quot;env&quot; : { &quot;currentCoinbase&quot;   : (CB:Int)     } =&gt; . ... &lt;/k&gt; &lt;beneficiary&gt;     _ =&gt; CB     &lt;/beneficiary&gt;
+    rule &lt;k&gt; load &quot;env&quot; : { &quot;currentDifficulty&quot; : (DIFF:Int)   } =&gt; . ... &lt;/k&gt; &lt;difficulty&gt;   _ =&gt; DIFF   &lt;/difficulty&gt;
+    rule &lt;k&gt; load &quot;env&quot; : { &quot;currentGasLimit&quot;   : (GLIMIT:Int) } =&gt; . ... &lt;/k&gt; &lt;gasLimit&gt;     _ =&gt; GLIMIT &lt;/gasLimit&gt;
+    rule &lt;k&gt; load &quot;env&quot; : { &quot;currentNumber&quot;     : (NUM:Int)    } =&gt; . ... &lt;/k&gt; &lt;number&gt;       _ =&gt; NUM    &lt;/number&gt;
+    rule &lt;k&gt; load &quot;env&quot; : { &quot;previousHash&quot;      : (HASH:Int)   } =&gt; . ... &lt;/k&gt;
+    rule &lt;k&gt; load &quot;env&quot; : { &quot;currentTimestamp&quot;  : (TS:Int)     } =&gt; . ... &lt;/k&gt; &lt;timestamp&gt;    _ =&gt; TS     &lt;/timestamp&gt;
+
+    rule load &quot;exec&quot; : { KEY : ((VAL:String) =&gt; #parseWord(VAL)) }
+      requires KEY in (SetItem(&quot;gas&quot;) SetItem(&quot;gasPrice&quot;) SetItem(&quot;value&quot;))
+    rule load &quot;exec&quot; : { KEY : ((VAL:String) =&gt; #parseHexWord(VAL)) }
+      requires KEY in (SetItem(&quot;address&quot;) SetItem(&quot;caller&quot;) SetItem(&quot;origin&quot;))
+ // --------------------------------------------------------------------------
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;gasPrice&quot; : (GPRICE:Int)   } =&gt; . ... &lt;/k&gt; &lt;gasPrice&gt;  _ =&gt; GPRICE   &lt;/gasPrice&gt;
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;gas&quot;      : (GAVAIL:Int)   } =&gt; . ... &lt;/k&gt; &lt;gas&gt;       _ =&gt; GAVAIL   &lt;/gas&gt;
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;address&quot;  : (ACCTTO:Int)   } =&gt; . ... &lt;/k&gt; &lt;id&gt;        _ =&gt; ACCTTO   &lt;/id&gt;
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;caller&quot;   : (ACCTFROM:Int) } =&gt; . ... &lt;/k&gt; &lt;caller&gt;    _ =&gt; ACCTFROM &lt;/caller&gt;
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;gas&quot;      : (GAVAIL:Int)   } =&gt; . ... &lt;/k&gt; &lt;gas&gt;       _ =&gt; GAVAIL   &lt;/gas&gt;
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;value&quot;    : (VALUE:Int)    } =&gt; . ... &lt;/k&gt; &lt;callValue&gt; _ =&gt; VALUE    &lt;/callValue&gt;
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;origin&quot;   : (ORIG:Int)     } =&gt; . ... &lt;/k&gt; &lt;origin&gt;    _ =&gt; ORIG     &lt;/origin&gt;
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;code&quot;     : ((CODE:String)   =&gt; #parseByteStack(CODE)) } ... &lt;/k&gt;
+
+    rule load &quot;exec&quot; : { &quot;data&quot; : ((DATA:String) =&gt; #parseByteStack(DATA)) }
+    rule load &quot;exec&quot; : { &quot;data&quot; : ((DATA:WordStack) =&gt; [#asUnsigned(DATA), #sizeWordStack(DATA)]) }
+ // -----------------------------------------------------------------------------------------------
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;data&quot; : [DATA:Int, LEN:Int] } =&gt; . ... &lt;/k&gt; &lt;callData&gt; _ =&gt; LEN , DATA , .Ints &lt;/callData&gt;
+    rule &lt;k&gt; load &quot;exec&quot; : { &quot;code&quot; : (CODE:WordStack) } =&gt; . ... &lt;/k&gt;
+         (&lt;program&gt;  _ &lt;/program&gt; =&gt; #loadCode(#dasmContract(CODE, Main)))
+         &lt;schedule&gt; SCHED &lt;/schedule&gt;
+</code></pre>
+<p>The <code>&quot;network&quot;</code> key allows setting the fee schedule inside the test.
+Since IELE is a new language with no hard forks yet, we only support the latest EVM gas schedule.</p>
+<pre class="hljs"><code>    rule &lt;k&gt; load &quot;network&quot; : SCHEDSTRING =&gt; . ... &lt;/k&gt;
+         &lt;schedule&gt; _ =&gt; #asScheduleString(SCHEDSTRING) &lt;/schedule&gt;
+
+    syntax Schedule ::= #asScheduleString ( String ) [function]
+ // -----------------------------------------------------------
+    rule #asScheduleString(&quot;Albe&quot;)      =&gt; ALBE
+    rule #asScheduleString(&quot;Danse&quot;)     =&gt; DANSE
+
+    rule &lt;k&gt; load &quot;checkGas&quot; : CHECKGAS =&gt; . ... &lt;/k&gt;
+         &lt;checkGas&gt; _ =&gt; CHECKGAS &lt;/checkGas&gt;
+</code></pre>
+<p>The <code>&quot;blockHeader&quot;</code> key loads the block information.</p>
+<pre class="hljs"><code>    rule load &quot;blockHeader&quot; : { &quot;nonce&quot; : (HN:String) } =&gt; .
+    rule load &quot;blockHeader&quot; : { &quot;receiptTrie&quot; : (HE:String) } =&gt; .
+    rule load &quot;blockHeader&quot; : { &quot;hash&quot; : _ } =&gt; .
+    rule load &quot;blockHeader&quot; : { &quot;uncleHash&quot; : (HO:String) } =&gt; .
+    rule load &quot;blockHeader&quot; : { &quot;mixHash&quot; : (HM:String) } =&gt; .
+    rule load &quot;blockHeader&quot; : { &quot;parentHash&quot; : (HP:String) } =&gt; .
+    rule load &quot;blockHeader&quot; : { &quot;extraData&quot; : (HX:String) } =&gt; .
+    rule load &quot;blockHeader&quot; : { &quot;stateRoot&quot; : (HR:String) } =&gt; .
+    rule load &quot;blockHeader&quot; : { &quot;transactionsTrie&quot; : (HT:String) } =&gt; .
+    rule load &quot;blockHeader&quot; : { &quot;bloom&quot; : (HB:String) } =&gt; .
+
+    rule &lt;k&gt; load &quot;blockHeader&quot; : { &quot;gasLimit&quot; : (HL:String) } =&gt; . ...&lt;/k&gt; 
+         &lt;gasLimit&gt; _ =&gt; #parseHexWord(HL) &lt;/gasLimit&gt;
+
+    rule &lt;k&gt; load &quot;blockHeader&quot; : { &quot;number&quot; : (HI:String) } =&gt; . ...&lt;/k&gt; 
+         &lt;number&gt; _ =&gt; #parseHexWord(HI) &lt;/number&gt;
+
+    rule &lt;k&gt; load &quot;blockHeader&quot; : { &quot;difficulty&quot; : (HD:String) } =&gt; . ...&lt;/k&gt; 
+         &lt;difficulty&gt; _ =&gt; #parseHexWord(HD) &lt;/difficulty&gt;
+
+    rule &lt;k&gt; load &quot;blockHeader&quot; : { &quot;timestamp&quot; : (HS:String) } =&gt; . ...&lt;/k&gt; 
+         &lt;timestamp&gt; _ =&gt; #parseHexWord(HS) &lt;/timestamp&gt;
+
+    rule &lt;k&gt; load &quot;blockHeader&quot; : { &quot;coinbase&quot; : (HC:String) } =&gt; . ...&lt;/k&gt; 
+         &lt;beneficiary&gt; _ =&gt; #parseHexWord(HC) &lt;/beneficiary&gt;
+
+    rule &lt;k&gt; load &quot;blockHeader&quot; : { &quot;gasUsed&quot; : (HG:String) } =&gt; . ...&lt;/k&gt; 
+         &lt;gasUsed&gt; _ =&gt; #parseHexWord(HG) &lt;/gasUsed&gt;
+
+    rule &lt;k&gt; load &quot;blockhashes&quot; : [ VAL:String , VALS ] =&gt; . ...&lt;/k&gt;
+         &lt;blockhash&gt;... .List =&gt; ListItem(#parseHexWord(VAL)) &lt;/blockhash&gt;
+</code></pre>
+<p>The <code>&quot;transactions&quot;</code> key loads the transactions.</p>
+<pre class="hljs"><code>    rule load &quot;transactions&quot; : { TX } =&gt; load &quot;transactions&quot; : { #sortJSONList(TX) }
+         requires notBool #isSorted(TX)
+
+    rule &lt;k&gt; load &quot;transactions&quot; : { &quot;arguments&quot; : [ ARGS ],  &quot;contractCode&quot; : TI , &quot;from&quot; : FROM, &quot;function&quot; : FUNC, &quot;gasLimit&quot; : TG , &quot;gasPrice&quot; : TP , &quot;nonce&quot; : TN , &quot;to&quot; : TT , &quot;value&quot; : TV , .JSONs } =&gt; . ... &lt;/k&gt;
+         &lt;txOrder&gt;   ... .List =&gt; ListItem(!ID) &lt;/txOrder&gt;
+         &lt;txPending&gt; ... .List =&gt; ListItem(!ID) &lt;/txPending&gt;
+         &lt;messages&gt;
+           ( .Bag
+          =&gt; &lt;message&gt;
+               &lt;msgID&gt;      !ID:Int               &lt;/msgID&gt;
+               &lt;txNonce&gt;    #parseHexWord(TN)     &lt;/txNonce&gt;
+               &lt;txGasPrice&gt; #parseHexWord(TP)     &lt;/txGasPrice&gt;
+               &lt;txGasLimit&gt; #parseHexWord(TG)     &lt;/txGasLimit&gt;
+               &lt;sendto&gt;     #asAccount(TT)        &lt;/sendto&gt;
+               &lt;func&gt;       String2IeleName(FUNC) &lt;/func&gt;
+               &lt;value&gt;      #parseHexWord(TV)     &lt;/value&gt;
+               &lt;from&gt;       #parseHexWord(FROM)   &lt;/from&gt;
+               &lt;data&gt;       #parseByteStack(TI)   &lt;/data&gt;
+               &lt;args&gt;       #toInts(ARGS)         &lt;/args&gt;
+             &lt;/message&gt;
+           )
+           ...
+         &lt;/messages&gt;
+
+    syntax Ints ::= #toInts ( JSONs ) [function]
+ // -----------------------------------------------
+    rule #toInts(.JSONs) =&gt; .Ints
+    rule #toInts(WORD:String , ARGS) =&gt; #parseHexWord(WORD) , #toInts(ARGS)
+</code></pre>
+<h3>Checking State</h3>
+<ul>
+<li><code>check_</code> checks if an account/transaction appears in the world-state as stated.</li>
+</ul>
+<pre class="hljs"><code>    syntax IELECommand ::= &quot;check&quot; JSON
+ // -----------------------------------
+    rule #exception CODE ~&gt; check J:JSON =&gt; check J ~&gt; #exception CODE
+    rule check DATA : { .JSONs } =&gt; . requires DATA =/=String &quot;transactions&quot;
+    rule check DATA : { (KEY:String) : VALUE , REST } =&gt; check DATA : { KEY : VALUE } ~&gt; check DATA : { REST }
+      requires REST =/=K .JSONs andBool notBool DATA in (SetItem(&quot;callcreates&quot;) SetItem(&quot;transactions&quot;))
+
+    rule check DATA : [ .JSONs ] =&gt; . requires DATA =/=String &quot;ommerHeaders&quot; andBool DATA =/=String &quot;out&quot;
+    rule check DATA : [ { TEST } , REST ] =&gt; check DATA : { TEST } ~&gt; check DATA : [ REST ] requires DATA =/=String &quot;transactions&quot;
+
+    rule check (KEY:String) : { JS:JSONs =&gt; #sortJSONList(JS) }
+      requires KEY in (SetItem(&quot;callcreates&quot;)) andBool notBool #isSorted(JS)
+
+    rule check TESTID : { &quot;post&quot; : POST } =&gt; check &quot;account&quot; : POST ~&gt; failure TESTID
+    rule check &quot;account&quot; : { ACCTID: { KEY : VALUE:JSON , REST } } =&gt; check &quot;account&quot; : { ACCTID : { KEY : VALUE } } ~&gt; check &quot;account&quot; : { ACCTID : { REST } } requires REST =/=K .JSONs
+ // -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    rule check &quot;account&quot; : { ((ACCTID:String) =&gt; #parseAddr(ACCTID)) : ACCT }
+    rule check &quot;account&quot; : { (ACCT:Int) : { &quot;balance&quot; : ((VAL:String)         =&gt; #parseWord(VAL)) } }
+    rule check &quot;account&quot; : { (ACCT:Int) : { &quot;nonce&quot;   : ((VAL:String)         =&gt; #parseWord(VAL)) } }
+    rule check &quot;account&quot; : { (ACCT:Int) : { &quot;code&quot;    : ((CODE:String)        =&gt; #parseByteStack(CODE)) } }
+    rule check &quot;account&quot; : { (ACCT:Int) : { &quot;storage&quot; : ({ STORAGE:JSONs } =&gt; #parseMap({ STORAGE })) } }
+
+
+    rule &lt;k&gt; check &quot;account&quot; : { ACCT : { &quot;balance&quot; : (BAL:Int) } } =&gt; . ... &lt;/k&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCT &lt;/acctID&gt;
+           &lt;balance&gt; BAL &lt;/balance&gt;
+           ...
+         &lt;/account&gt;
+
+    rule &lt;k&gt; check &quot;account&quot; : { ACCT : { &quot;nonce&quot; : (NONCE:Int) } } =&gt; . ... &lt;/k&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCT &lt;/acctID&gt;
+           &lt;nonce&gt; NONCE &lt;/nonce&gt;
+           ...
+         &lt;/account&gt;
+
+    rule &lt;k&gt; check &quot;account&quot; : { ACCT : { &quot;storage&quot; : (STORAGE:Map) } } =&gt; . ... &lt;/k&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCT &lt;/acctID&gt;
+           &lt;storage&gt; ACCTSTORAGE &lt;/storage&gt;
+           ...
+         &lt;/account&gt;
+      requires #removeZeros(ACCTSTORAGE) ==K STORAGE
+
+    rule &lt;k&gt; check &quot;account&quot; : { ACCT : { &quot;code&quot; : (CODE:WordStack) } } =&gt; . ... &lt;/k&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCT &lt;/acctID&gt;
+           &lt;code&gt; CONTRACT &lt;/code&gt;
+           ...
+         &lt;/account&gt;
+         requires #dasmContract(CODE, #mainContract(CONTRACT)) ==K CONTRACT
+    rule &lt;k&gt; check &quot;account&quot; : { ACCT : { &quot;code&quot; : .WordStack } } =&gt; . ... &lt;/k&gt;
+         &lt;account&gt;
+           &lt;acctID&gt; ACCT &lt;/acctID&gt;
+           ...
+         &lt;/account&gt;
+</code></pre>
+<p>Here we check the other post-conditions associated with an EVM test.</p>
+<pre class="hljs"><code>    rule check TESTID : { &quot;results&quot; : [ _ , A , REST =&gt; A , REST ] }
+    rule check TESTID : { &quot;results&quot; : [ A , .JSONs ] } =&gt; check TESTID : A
+
+    rule check TESTID : { &quot;out&quot; : OUT } =&gt; check &quot;out&quot; : OUT ~&gt; failure TESTID
+ // --------------------------------------------------------------------------
+    rule check &quot;out&quot; : ((OUT:String) =&gt; #parseHexWord(OUT))
+    rule &lt;k&gt; check &quot;out&quot; : OUT:Int =&gt; . ... &lt;/k&gt; &lt;output&gt; OUT , .Ints &lt;/output&gt;
+    rule &lt;k&gt; check &quot;out&quot; : 0   =&gt; . ... &lt;/k&gt; &lt;output&gt; .Ints &lt;/output&gt;
+    rule &lt;k&gt; check &quot;out&quot; : [ OUT ] =&gt; . ... &lt;/k&gt; &lt;output&gt; OUTPUT &lt;/output&gt; requires #toInts(OUT) ==K OUTPUT
+
+    rule check TESTID : { &quot;logs&quot; : LOGS } =&gt; check &quot;logs&quot; : LOGS ~&gt; failure TESTID
+ // ------------------------------------------------------------------------------
+    rule &lt;k&gt; check &quot;logs&quot; : HASH:String =&gt; . ... &lt;/k&gt; &lt;logData&gt; SL &lt;/logData&gt; requires #parseByteStack(Keccak256(#rlpEncodeLogs(SL))) ==K #parseByteStack(HASH)
+
+    rule check TESTID : { &quot;status&quot; : STATUS } =&gt; check &quot;status&quot; : STATUS ~&gt; failure TESTID
+ // --------------------------------------------------------------------------------------
+    rule check &quot;status&quot; : (STATUS:String =&gt; #parseHexWord(STATUS))
+    rule &lt;k&gt; check &quot;status&quot; : STATUS:Int =&gt; . ... &lt;/k&gt; &lt;regs&gt; REGS &lt;/regs&gt; requires REGS [ 0 ] ==K STATUS
+
+    rule check TESTID : { &quot;refund&quot; : REFUND } =&gt; check &quot;refund&quot; : REFUND ~&gt; failure TESTID
+ // --------------------------------------------------------------------------------------
+    rule check &quot;refund&quot; : (REFUND:String =&gt; #parseHexWord(REFUND))
+    rule &lt;k&gt; check &quot;refund&quot; : REFUND:Int =&gt; . ... &lt;/k&gt; &lt;refund&gt; REFUND &lt;/refund&gt;
+
+    syntax String ::= #rlpEncodeLogs(List)        [function]
+                    | #rlpEncodeLogsAux(List)     [function]
+                    | #rlpEncodeTopics(List) [function]
+ // --------------------------------------------------------
+    rule #rlpEncodeLogs(SL) =&gt; #rlpEncodeLength(#rlpEncodeLogsAux(SL), 192)
+    rule #rlpEncodeLogsAux(ListItem({ ACCT | TOPICS | DATA }) SL) =&gt; #rlpEncodeLength(#rlpEncodeBytes(ACCT, 20) +String #rlpEncodeLength(#rlpEncodeTopics(TOPICS), 192) +String #rlpEncodeString(Bytes2String(DATA)), 192) +String #rlpEncodeLogsAux(SL)
+    rule #rlpEncodeLogsAux(.List) =&gt; &quot;&quot;
+    rule #rlpEncodeTopics(ListItem(TOPIC) TOPICS) =&gt; #rlpEncodeBytes(chop(TOPIC), 32) +String #rlpEncodeTopics(TOPICS)
+    rule #rlpEncodeTopics(.List) =&gt; &quot;&quot;
+
+    rule check TESTID : { &quot;gas&quot; : GLEFT } =&gt; check &quot;gas&quot; : GLEFT ~&gt; failure TESTID
+ // ------------------------------------------------------------------------------
+    rule check &quot;gas&quot; : ((GLEFT:String) =&gt; #parseWord(GLEFT))
+    rule &lt;k&gt; check &quot;gas&quot; : GLEFT =&gt; . ... &lt;/k&gt; &lt;checkGas&gt; false &lt;/checkGas&gt;
+    rule &lt;k&gt; check &quot;gas&quot; : GLEFT =&gt; . ... &lt;/k&gt; &lt;checkGas&gt; true  &lt;/checkGas&gt; &lt;gas&gt; GLEFT &lt;/gas&gt;
+
+    rule check TESTID : { &quot;callcreates&quot; : CCREATES } =&gt; check &quot;callcreates&quot; : CCREATES ~&gt; failure TESTID
+ // ----------------------------------------------------------------------------------------------------
+    rule check &quot;callcreates&quot; : { (&quot;data&quot; : (DATA:String)) , (&quot;destination&quot; : (ACCTTO:String)) , (&quot;gasLimit&quot; : (GLIMIT:String)) , (&quot;value&quot; : (VAL:String)) , .JSONs }
+      =&gt; .
+
+    rule check TESTID : { &quot;genesisBlockHeader&quot; : BLOCKHEADER } =&gt; check &quot;genesisBlockHeader&quot; : BLOCKHEADER ~&gt; failure TESTID
+ // ------------------------------------------------------------------------------------------------------------------------
+    rule check &quot;genesisBlockHeader&quot; : { KEY : VALUE:JSON , REST } =&gt; check &quot;genesisBlockHeader&quot; : { KEY : VALUE } ~&gt; check &quot;genesisBlockHeader&quot; : { REST } requires REST =/=K .JSONs
+    rule check &quot;genesisBlockHeader&quot; : { KEY : VALUE } =&gt; .K requires KEY =/=String &quot;hash&quot;
+
+    rule check &quot;genesisBlockHeader&quot; : { &quot;hash&quot;: (HASH:String =&gt; #parseHexWord(HASH)) }
+    rule &lt;k&gt; check &quot;genesisBlockHeader&quot; : { &quot;hash&quot;: HASH } =&gt; . ... &lt;/k&gt;
+         &lt;blockhash&gt; ... ListItem(HASH) ListItem(_) &lt;/blockhash&gt;
+</code></pre>
+<pre class="hljs"><code><span class="hljs-keyword">endmodule</span>
+</code></pre>
+</body></html></div>
+        </main>
+      </div>
+    </div>
+<footer class="app-footer text-md-left text-center">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-2 mb-md-0 mb-4">
+        <span class="pr-md-5 pr-0 py-3">
+          <a href="https://runtimeverification.com" target="_blank">
+            <picture>
+              <source
+                srcset="../assets/img/rv-logo-dark.png"
+                media="(prefers-color-scheme: dark)"
+              />
+              <img
+                class="pr-3 footer-logo"
+                src="../assets/img/rv-logo.png"
+                alt="Runtime Verification Inc logo"
+              />
+            </picture>
+          </a>
+        </span>
+      </div>
+      <div class="col-md-6 mb-md-0 mb-4"></div>
+      <div class="col-md-4 text-md-right">
+        <p class="copyright">
+          &copy; 2020 Runtime Verification Inc. All right reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=UA-163311512-1"
+></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "UA-163311512-1");
+</script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Typist/1.2/typist.min.js"></script>
+    <script src="../assets/js/index.js"></script>
+  </body>
+</html>
