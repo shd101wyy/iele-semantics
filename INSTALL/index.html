@@ -49,15 +49,7 @@
 <header
   class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar"
 >
-  <a class="logo-link" href="../index.html">
-    <img
-      class="logo-dark"
-      srcset="../assets/img/iele-logo.png"
-      alt="K"
-      style="height: 48px"
-    />
-    Semantic Framework
-  </a>
+  <a class="logo-link" href="../index.html"> IELE Semantics </a>
   <ul class="navbar-nav ml-md-auto">
     <li class="nav-item">
       <a
@@ -71,11 +63,13 @@
       </a>
     </li>
   </ul>
+  <!--
   <a
     class="btn btn-rv-blue d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"
     href="../downloads"
     >Download</a
   >
+  -->
 </header>
 
 
@@ -116,7 +110,7 @@
           class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content"
           role="main"
         >
-          <div class="markdown-preview"><html><head></head><body><h1>Installing IELE</h1>
+          <div class="markdown-preview"><html><head></head><body><h1 id="installing-iele">Installing IELE</h1>
 <p>In a nutshell, to install IELE on an Ubuntu 16.04 machine, run:</p>
 <pre class="hljs"><code>
 sudo apt-get update
@@ -146,7 +140,7 @@ brew install maven opam pkg-config gmp mpfr automake libtool pandoc
 <p>To test against our test suite, run <code>make test</code>. For more details, see <a href="https://github.com/runtimeverification/iele-semantics#testing-1" target="_blank" rel="noopener">here</a>.</p>
 <p>Other Linux distros can install by installing the list of dependencies in the <code>apt-get install</code> command above and then following the rest of the instructions.</p>
 <p>To install on Windows, first install <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10" target="_blank" rel="noopener">Windows Subsystem for Linux</a> and then proceed with the installation for Ubuntu 16.04. Note that the installation will take significantly longer due to existing problems in the performance of disk-intensive processes in WSL, and you should expect it to over half an hour. However, once installed, it should run roughly the same speed as on native Linux.</p>
-<h1>Developers</h1>
+<h1 id="developers">Developers</h1>
 <p>If you have run the above setup, and a build fails because of missing dependences after checking out a different version of the code,
 you can probably fix it by making sure the git submodules are up to date with <code>git submodule update --init</code> and then running <code>make deps</code>. If that fails, it should always work to repeat the full installation instructions above.</p>
 </body></html></div>

@@ -49,15 +49,7 @@
 <header
   class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar"
 >
-  <a class="logo-link" href="../index.html">
-    <img
-      class="logo-dark"
-      srcset="../assets/img/iele-logo.png"
-      alt="K"
-      style="height: 48px"
-    />
-    Semantic Framework
-  </a>
+  <a class="logo-link" href="../index.html"> IELE Semantics </a>
   <ul class="navbar-nav ml-md-auto">
     <li class="nav-item">
       <a
@@ -71,11 +63,13 @@
       </a>
     </li>
   </ul>
+  <!--
   <a
     class="btn btn-rv-blue d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"
     href="../downloads"
     >Download</a
   >
+  -->
 </header>
 
 
@@ -116,12 +110,12 @@
           class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content"
           role="main"
         >
-          <div class="markdown-preview"><html><head></head><body><h1>IELE Contract Well-Formedness</h1>
+          <div class="markdown-preview"><html><head></head><body><h1 id="iele-contract-well-formedness">IELE Contract Well-Formedness</h1>
 <p>The following document describes a semantics of type- and semantic-checking in IELE. The semantics takes a contract as input and succeeds only if the contract is determined to be well-formed, i.e., free from type errors and malformed instructions or functions.</p>
 <pre class="hljs"><code><span class="hljs-keyword">require</span> <span class="hljs-string">&quot;iele-syntax.md&quot;</span><span class="hljs-keyword">
 require</span> <span class="hljs-string">&quot;data.md&quot;</span>
 </code></pre>
-<h2>Modal Semantics</h2>
+<h2 id="modal-semantics">Modal Semantics</h2>
 <p>Our semantics is modal, with the initial mode being set on the command line via <code>-cMODE=EXECMODE</code>.</p>
 <ul>
 <li><code>NORMAL</code> executes as a client on the network would.</li>
@@ -140,7 +134,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
     imports</span> IELE-CONSTANTS<span class="hljs-keyword">
     imports</span> DEFAULT-CONFIGURATION
 </code></pre>
-<h2>Configuration</h2>
+<h2 id="configuration">Configuration</h2>
 <p>The semantic checker for IELE has its own configuration separate from the configuration of execution. This is consistent with the semantics of other languages defined in K, which can have separate compile-time and execution-time semantics.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> IeleNameToken ::= <span class="hljs-string">&quot;Main&quot;</span> [<span class="hljs-literal">token</span>]<span class="hljs-keyword">
     syntax</span> Schedule<span class="hljs-keyword">
@@ -162,7 +156,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
                     &lt;/currentContract&gt;
                   &lt;/well-formedness&gt;
 </code></pre>
-<h2>Types</h2>
+<h2 id="types">Types</h2>
 <p>IELE is a primarily untyped language, and therefore identifiers have one of two types: either an integer or a function.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> Type ::= <span class="hljs-string">&quot;int&quot;</span> | Types <span class="hljs-string">&quot;-&gt;&quot;</span> ReturnType [klabel(funType)]<span class="hljs-keyword">
     syntax</span> Types ::= List{Type,<span class="hljs-string">&quot;,&quot;</span>} [klabel(typeList)]<span class="hljs-keyword">
@@ -174,7 +168,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
     rule</span> ints(<span class="hljs-number">0</span>) =&gt; .Types<span class="hljs-keyword">
     rule</span> ints(N) =&gt; int , ints(N -<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>) [owise]
 </code></pre>
-<h2>Contracts</h2>
+<h2 id="contracts">Contracts</h2>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> CONTRACT1::ContractDefinition CONTRACT2::ContractDefinition CONTRACTS =&gt; CONTRACT1 ~&gt; CONTRACT2 CONTRACTS<span class="hljs-keyword">
     rule</span> CONTRACT::ContractDefinition .Contract =&gt; (CONTRACT::ContractDefinition :KItem)<span class="hljs-keyword">
 
@@ -191,7 +185,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
          &lt;functionBodies&gt; BODIES &lt;/functionBodies&gt;
          &lt;types&gt; ... init |-&gt; _ -&gt; .Types &lt;/types&gt;
 </code></pre>
-<h2>Top Level Definitions</h2>
+<h2 id="top-level-definitions">Top Level Definitions</h2>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; external contract NAME =&gt; . ... &lt;/k&gt;
          &lt;contracts&gt; CONTRACTS &lt;/contracts&gt;
          &lt;declaredContracts&gt; DECLARED =&gt; DECLARED SetItem(NAME) &lt;/declaredContracts&gt;<span class="hljs-keyword">
@@ -247,7 +241,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
       requires</span> String2Int(IeleName2String(N)) ==<span class="hljs-keyword">Int</span> I<span class="hljs-keyword">
     rule</span> checkIntArgs(.LocalNames, _) =&gt; .
 </code></pre>
-<h2>Blocks</h2>
+<h2 id="blocks">Blocks</h2>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; BLOCK:UnlabeledBlock BLOCKS =&gt; BLOCKS ... &lt;/k&gt;
          &lt;typeChecking&gt; true &lt;/typeChecking&gt;
          &lt;currentInstructions&gt; .K =&gt; BLOCK ... &lt;/currentInstructions&gt;<span class="hljs-keyword">
@@ -267,8 +261,8 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
          &lt;typeChecking&gt; true &lt;/typeChecking&gt;<span class="hljs-keyword">
     rule</span> .Instructions =&gt; .
 </code></pre>
-<h2>Instructions</h2>
-<h3>Regular Instructions</h3>
+<h2 id="instructions">Instructions</h2>
+<h3 id="regular-instructions">Regular Instructions</h3>
 <p>Each of these instructions takes some number of immediates, globals, or registers, and returns zero or one registers. Checking them is as straightforward as checking for reserved names.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> KResult ::= Type
                      | Types<span class="hljs-keyword">
@@ -322,7 +316,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
     rule</span> check ~&gt; revert OP1 =&gt; checkOperand(OP1)<span class="hljs-keyword">
     rule</span> check ~&gt; selfdestruct OP1 =&gt; checkOperand(OP1)
 </code></pre>
-<h3>Static Jumps</h3>
+<h3 id="static-jumps">Static Jumps</h3>
 <p>Checking these instructions requires checking that a label exists that matches the specified label.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; check ~&gt; br NAME =&gt; . ... &lt;/k&gt;
          &lt;labels&gt; ... SetItem(NAME) &lt;/labels&gt;<span class="hljs-keyword">
@@ -330,7 +324,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
     rule</span> &lt;k&gt; check ~&gt; br OP1, NAME =&gt; checkOperand(OP1) ... &lt;/k&gt;
          &lt;labels&gt; ... SetItem(NAME) &lt;/labels&gt;
 </code></pre>
-<h3>Function Calls and Returns</h3>
+<h3 id="function-calls-and-returns">Function Calls and Returns</h3>
 <p>Checking these instructions requires checking the types of local function calls and checking the consistency of the return type.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; check ~&gt; RETS = call @ NAME ( ARGS ) =&gt; checkLVals(RETS) ~&gt; checkOperands(ARGS) ... &lt;/k&gt;
          &lt;types&gt; ... NAME |-&gt; ARGTYPES -&gt; RETTYPES:Types &lt;/types&gt;
@@ -358,14 +352,14 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
          &lt;functionName&gt; NAME &lt;/functionName&gt;
          &lt;types&gt; ... NAME |-&gt; _ -&gt; (unknown =&gt; ints(#sizeRegs(OPS))) &lt;/types&gt;
 </code></pre>
-<h3>Contract Creation</h3>
+<h3 id="contract-creation">Contract Creation</h3>
 <p>Checking these instructions also requires checking that the contract they reference has been declared.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; check ~&gt; STATUS , RET = create NAME ( ARGS ) send OP1 =&gt; checkLVals(STATUS, RET) ~&gt; checkOperands(OP1 , ARGS) ... &lt;/k&gt;
          &lt;declaredContracts&gt; ... SetItem(NAME) &lt;/declaredContracts&gt;<span class="hljs-keyword">
 
     rule</span> check ~&gt; STATUS , RET = copycreate OP1 ( ARGS ) send OP2 =&gt; checkLVals(STATUS, RET) ~&gt; checkOperands(OP1 , OP2 , ARGS)
 </code></pre>
-<h2>Types of intrinsic functions</h2>
+<h2 id="types-of-intrinsic-functions">Types of intrinsic functions</h2>
 <p>Below are defined the types of the reserved functions that begin with &quot;iele.&quot;.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> Map ::= <span class="hljs-string">&quot;intrinsicTypes&quot;</span> [function]
  <span class="hljs-comment">// ------------------------------------------</span><span class="hljs-keyword">
@@ -390,7 +384,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
     )))))))))))))))))
     
 </code></pre>
-<h2>Reserved Names</h2>
+<h2 id="reserved-names">Reserved Names</h2>
 <p>All identifiers beginning with &quot;iele.&quot; are reserved by the language and cannot be written to.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> KItem ::= checkName(IeleName)
  <span class="hljs-comment">// ------------------------------------</span><span class="hljs-keyword">
@@ -415,7 +409,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
       requires</span> IDX ==<span class="hljs-keyword">Int</span> lengthString(S) -<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span><span class="hljs-keyword">
     rule</span> `StringIeleName`(NAME:StringIeleName) =&gt; String2IeleName(unescape(StringIeleName2String(NAME)))
 </code></pre>
-<h2>Checking Operands</h2>
+<h2 id="checking-operands">Checking Operands</h2>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> KItem ::= checkOperand(Operand)
                    | checkOperands(Operands)
  <span class="hljs-comment">// ----------------------------------------</span><span class="hljs-keyword">
@@ -426,7 +420,7 @@ module</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
     rule</span> checkOperand(_:IntConstant) =&gt; .<span class="hljs-keyword">
     rule</span> checkOperand(@ NAME) =&gt; .
 </code></pre>
-<h2>Checking LValues</h2>
+<h2 id="checking-lvalues">Checking LValues</h2>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> KItem ::= checkLVal(LValue)
                    | checkLVals(LValues)
  <span class="hljs-comment">// --------------------------------------</span><span class="hljs-keyword">

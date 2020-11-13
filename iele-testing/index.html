@@ -49,15 +49,7 @@
 <header
   class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar"
 >
-  <a class="logo-link" href="../index.html">
-    <img
-      class="logo-dark"
-      srcset="../assets/img/iele-logo.png"
-      alt="K"
-      style="height: 48px"
-    />
-    Semantic Framework
-  </a>
+  <a class="logo-link" href="../index.html"> IELE Semantics </a>
   <ul class="navbar-nav ml-md-auto">
     <li class="nav-item">
       <a
@@ -71,11 +63,13 @@
       </a>
     </li>
   </ul>
+  <!--
   <a
     class="btn btn-rv-blue d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"
     href="../downloads"
     >Download</a
   >
+  -->
 </header>
 
 
@@ -116,9 +110,9 @@
           class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content"
           role="main"
         >
-          <div class="markdown-preview"><html><head></head><body><h1>IELE Testing</h1>
+          <div class="markdown-preview"><html><head></head><body><h1 id="iele-testing">IELE Testing</h1>
 <p>Here we define a test harness for the new IELE VM.
-Actual execution of IELE is defined in <a href="iele/">the IELE file</a>.</p>
+Actual execution of IELE is defined in <a href="../iele/">the IELE file</a>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">requires</span> <span class="hljs-string">&quot;iele.md&quot;</span><span class="hljs-keyword">
 requires</span> <span class="hljs-string">&quot;iele-binary.md&quot;</span>
 </code></pre>
@@ -168,7 +162,7 @@ To do so, we&apos;ll extend sort <code>JSON</code> with some IELE specific synta
     rule</span> #isSorted( KEY : _:JSON )   =&gt; true<span class="hljs-keyword">
     rule</span> #isSorted( (KEY : _) , (KEY&apos; : VAL) , REST ) =&gt; KEY &lt;=<span class="hljs-keyword">String</span> KEY&apos; andThenBool #isSorted((KEY&apos; : VAL) , REST)
 </code></pre>
-<h3>Driving Execution</h3>
+<h3 id="driving-execution">Driving Execution</h3>
 <ul>
 <li><code>start</code> places <code>#next</code> on the <code>&lt;k&gt;</code> cell so that execution of the loaded state begin.</li>
 <li><code>flush</code> places <code>#finalize</code> on the <code>&lt;k&gt;</code> cell once it sees <code>#end</code> in the <code>&lt;k&gt;</code> cell, clearing any exceptions it finds.</li>
@@ -336,7 +330,7 @@ To do so, we&apos;ll extend sort <code>JSON</code> with some IELE specific synta
     rule</span> &lt;k&gt; success =&gt; . ... &lt;/k&gt; &lt;exit-code&gt; _ =&gt; <span class="hljs-number">0</span> &lt;/exit-code&gt;<span class="hljs-keyword">
     rule</span> failure _ =&gt; .
 </code></pre>
-<h3>Running Tests</h3>
+<h3 id="running-tests">Running Tests</h3>
 <ul>
 <li><code>run</code> runs a given set of IELE tests (from the test-set).</li>
 </ul>
@@ -404,8 +398,8 @@ To do so, we&apos;ll extend sort <code>JSON</code> with some IELE specific synta
 
     rule</span> run TESTID : { KEY : _:JSON , REST } =&gt; run TESTID : { REST }<span class="hljs-keyword"> requires</span> KEY in #discardKeys
 </code></pre>
-<h2>State Manipulation</h2>
-<h3>Clearing State</h3>
+<h2 id="state-manipulation">State Manipulation</h2>
+<h3 id="clearing-state">Clearing State</h3>
 <ul>
 <li><code>clear</code> clears all the execution state of the machine.</li>
 </ul>
@@ -416,7 +410,7 @@ To do so, we&apos;ll extend sort <code>JSON</code> with some IELE specific synta
          (&lt;iele&gt; _ &lt;/iele&gt; =&gt; &lt;iele&gt; ... .Bag &lt;/iele&gt;)
 
 </code></pre>
-<h3>Loading State</h3>
+<h3 id="loading-state">Loading State</h3>
 <ul>
 <li><code>mkAcct_</code> creates an account with the supplied ID (assuming it&apos;s already been chopped to 160 bits).</li>
 </ul>
@@ -587,7 +581,7 @@ Since IELE is a new language with no hard forks yet, we only support the latest 
     rule</span> #toInts(.JSONs) =&gt; .Ints<span class="hljs-keyword">
     rule</span> #toInts(WORD:<span class="hljs-keyword">String</span> , ARGS) =&gt; #parseHexWord(WORD) , #toInts(ARGS)
 </code></pre>
-<h3>Checking State</h3>
+<h3 id="checking-state">Checking State</h3>
 <ul>
 <li><code>check_</code> checks if an account/transaction appears in the world-state as stated.</li>
 </ul>

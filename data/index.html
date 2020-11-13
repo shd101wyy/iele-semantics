@@ -49,15 +49,7 @@
 <header
   class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar"
 >
-  <a class="logo-link" href="../index.html">
-    <img
-      class="logo-dark"
-      srcset="../assets/img/iele-logo.png"
-      alt="K"
-      style="height: 48px"
-    />
-    Semantic Framework
-  </a>
+  <a class="logo-link" href="../index.html"> IELE Semantics </a>
   <ul class="navbar-nav ml-md-auto">
     <li class="nav-item">
       <a
@@ -71,11 +63,13 @@
       </a>
     </li>
   </ul>
+  <!--
   <a
     class="btn btn-rv-blue d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"
     href="../downloads"
     >Download</a
   >
+  -->
 </header>
 
 
@@ -116,7 +110,7 @@
           class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content"
           role="main"
         >
-          <div class="markdown-preview"><html><head></head><body><h1>IELE Words</h1>
+          <div class="markdown-preview"><html><head></head><body><h1 id="iele-words">IELE Words</h1>
 <p>IELE uses arbitrary-precision integers, and sometimes also bytes (8 bit words).
 Here we provide the arithmetic of these words, as well as some data-structures over them.
 Both are implemented using K&apos;s <code>Int</code>.</p>
@@ -145,7 +139,7 @@ module</span> IELE-DATA<span class="hljs-keyword">
     rule</span> pow160 =&gt; <span class="hljs-number">2</span> ^<span class="hljs-keyword">Int</span> <span class="hljs-number">160</span><span class="hljs-keyword">
     rule</span> pow256 =&gt; <span class="hljs-number">2</span> ^<span class="hljs-keyword">Int</span> <span class="hljs-number">256</span>
 </code></pre>
-<h2>Primitives</h2>
+<h2 id="primitives">Primitives</h2>
 <p>Primitives provide the basic conversion from K&apos;s sorts <code>Int</code> and <code>Bool</code> to IELE&apos;s words.</p>
 <ul>
 <li><code>chop</code> interperets an integers modulo $2^256$. This is used when interpreting
@@ -170,7 +164,7 @@ arbitrary precision integers as memory indices.</li>
     rule</span> word2Bool( <span class="hljs-number">0</span> ) =&gt; false<span class="hljs-keyword">
     rule</span> word2Bool( W ) =&gt; true<span class="hljs-keyword">  requires</span> W =/=K <span class="hljs-number">0</span>
 </code></pre>
-<h3>Empty Account</h3>
+<h3 id="empty-account">Empty Account</h3>
 <ul>
 <li><code>.Account</code> represents the case when an account ID is needed, but
 the actual value of the account ID is the empty set. This is used, for example, when
@@ -178,7 +172,7 @@ referring to the destination of a message which creates a new contract.</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> Account ::= <span class="hljs-string">&quot;.Account&quot;</span> |<span class="hljs-keyword"> Int</span>
 </code></pre>
-<h3>Register Operations</h3>
+<h3 id="register-operations">Register Operations</h3>
 <ul>
 <li><code>#sizeRegs(R)</code> returns the number of registers in a list of Operands.</li>
 <li><code>#sizeLVals(R)</code> returns the number of registers in a list of LValues.</li>
@@ -213,7 +207,7 @@ referring to the destination of a message which creates a new contract.</li>
     rule</span> getIeleName(X:IeleName) =&gt; X
 
 </code></pre>
-<h2>Arithmetic</h2>
+<h2 id="arithmetic">Arithmetic</h2>
 <ul>
 <li><code>up/Int</code> performs integer division but rounds up instead of down.</li>
 </ul>
@@ -274,7 +268,7 @@ You could alternatively calculate <code>I1 %Int I2</code>, then add one to the n
     rule</span> #gcdInt(A, <span class="hljs-number">0</span>) =&gt; A<span class="hljs-keyword">
     rule</span> #gcdInt(A, B) =&gt; #gcdInt(B, A modInt B) [owise]
 </code></pre>
-<h2>Bitwise Operators</h2>
+<h2 id="bitwise-operators">Bitwise Operators</h2>
 <ul>
 <li><code>byte</code> gets byte $N$ (0 being the LSB).</li>
 </ul>
@@ -311,9 +305,9 @@ You could alternatively calculate <code>I1 %Int I2</code>, then add one to the n
  <span class="hljs-comment">// ----------------------------------------------</span><span class="hljs-keyword">
     rule</span> keccak(WS) =&gt; #parseHexWord(Keccak256(Bytes2String(WS)))
 </code></pre>
-<h1>Data Structures</h1>
+<h1 id="data-structures">Data Structures</h1>
 <p>Several data-structures and operations over <code>Int</code> are useful to have around.</p>
-<h2>Word Stack</h2>
+<h2 id="word-stack">Word Stack</h2>
 <p>IELE makes use of a stack in some places in order to represent lists of integers.
 The stack and some standard operations over it are provided here.
 This stack also serves as a cons-list, so we provide some standard cons-list manipulation tools.</p>
@@ -382,7 +376,7 @@ This stack also serves as a cons-list, so we provide some standard cons-list man
     rule</span> #padToWidth(N, WS) =&gt; WS<span class="hljs-keyword">                     requires</span> notBool #sizeWordStack(WS) &lt;<span class="hljs-keyword">Int</span> N<span class="hljs-keyword">
     rule</span> #padToWidth(N, WS) =&gt; #padToWidth(N, <span class="hljs-number">0</span> : WS)<span class="hljs-keyword"> requires</span> #sizeWordStack(WS) &lt;<span class="hljs-keyword">Int</span> N
 </code></pre>
-<h2>Memory</h2>
+<h2 id="memory">Memory</h2>
 <ul>
 <li><code>.Array</code> is an arbitrary length array of zeroes.</li>
 <li><code>.Memory</code> is an arbitrary length array of byte buffers.</li>
@@ -392,7 +386,7 @@ This stack also serves as a cons-list, so we provide some standard cons-list man
  <span class="hljs-comment">// ---------------------------------------------</span><span class="hljs-keyword">
     rule</span> .Array =&gt; makeArray(pow30, <span class="hljs-number">0</span>)
 </code></pre>
-<h2>Byte Arrays</h2>
+<h2 id="byte-arrays">Byte Arrays</h2>
 <p>The local memory of execution is a byte-array (instead of a word-array).</p>
 <ul>
 <li><code>#asUnsigned</code> will interpret a WordStack as a single unsigned integer (with MSB first).</li>
@@ -426,7 +420,7 @@ Differs from <code>Bytes2Int</code> only in that an empty stack represents the e
     rule</span> B::Bytes [ I := B&apos;::Bytes ] =&gt; B<span class="hljs-keyword">
       requires</span> B&apos; ==K .Bytes
 </code></pre>
-<h2>Addresses</h2>
+<h2 id="addresses">Addresses</h2>
 <ul>
 <li><code>#addr</code> turns a IELE arbitrary-precision word into the corresponding IELE address (modulo 2^160).</li>
 </ul>
@@ -450,7 +444,7 @@ Differs from <code>Bytes2Int</code> only in that an empty stack represents the e
     rule</span> #sender(<span class="hljs-string">&quot;&quot;</span>)  =&gt; .Account<span class="hljs-keyword">
     rule</span> #sender(STR) =&gt; #addr(#parseHexWord(Keccak256(STR)))<span class="hljs-keyword"> requires</span> STR =/=<span class="hljs-keyword">String</span> <span class="hljs-string">&quot;&quot;</span>
 </code></pre>
-<h2>Word Map</h2>
+<h2 id="word-map">Word Map</h2>
 <ul>
 <li><code>#removeZeros</code> removes any entries in a map with zero values.</li>
 </ul>
@@ -462,10 +456,10 @@ Differs from <code>Bytes2Int</code> only in that an empty stack represents the e
     rule</span> #removeZeros( ListItem(KEY) L, KEY |-&gt; <span class="hljs-number">0</span> REST )     =&gt; #removeZeros(L, REST)<span class="hljs-keyword">
     rule</span> #removeZeros( ListItem(KEY) L, KEY |-&gt; VALUE REST ) =&gt; KEY |-&gt; VALUE #removeZeros(L, REST)<span class="hljs-keyword"> requires</span> VALUE =/=K <span class="hljs-number">0</span>
 </code></pre>
-<h1>Parsing/Unparsing</h1>
+<h1 id="parsing%2Funparsing">Parsing/Unparsing</h1>
 <p>The IELE test-sets are represented in JSON format with hex-encoding of the data and programs.
 Here we provide some standard parser/unparser functions for that format.</p>
-<h2>Parsing</h2>
+<h2 id="parsing">Parsing</h2>
 <p>These parsers can interperet hex-encoded strings as <code>Int</code>s, <code>WordStack</code>s, and <code>Map</code>s.</p>
 <ul>
 <li><code>#parseHexWord</code> interperets a string as a single hex-encoded <code>Word</code>.</li>
@@ -507,7 +501,7 @@ Here we provide some standard parser/unparser functions for that format.</p>
  <span class="hljs-comment">// -----------------------------------------------</span><span class="hljs-keyword">
     rule</span> #parseAddr(S) =&gt; #addr(#parseHexWord(S))
 </code></pre>
-<h2>Unparsing</h2>
+<h2 id="unparsing">Unparsing</h2>
 <p>We need to interperet a <code>WordStack</code> as a <code>String</code> again so that we can call <code>Keccak256</code> on it from <code>KRYPTO</code>.</p>
 <ul>
 <li><code>#unparseByteStack</code> turns a stack of bytes (as a <code>WordStack</code>) into a <code>String</code>.</li>
@@ -520,11 +514,11 @@ Here we provide some standard parser/unparser functions for that format.</p>
     rule</span> #unparseByteStack( .WordStack, BUFFER ) =&gt; StringBuffer2String(BUFFER)<span class="hljs-keyword">
     rule</span> #unparseByteStack( W : WS, BUFFER )     =&gt; #unparseByteStack(WS, BUFFER +<span class="hljs-keyword">String</span> chrChar(W))
 </code></pre>
-<h1>Recursive Length Prefix (RLP)</h1>
+<h1 id="recursive-length-prefix-(rlp)">Recursive Length Prefix (RLP)</h1>
 <p>RLP encoding is used extensively for executing the blocks of a transaction.
 For details about RLP encoding, see the <a href="http://gavwood.com/paper.pdf" target="_blank" rel="noopener">YellowPaper Appendix B</a>.
 This is included only for compatibility with the EVM test suite.</p>
-<h2>Encoding</h2>
+<h2 id="encoding">Encoding</h2>
 <ul>
 <li><code>#rlpEncodeWord</code> RLP encodes a single EVM word.</li>
 <li><code>#rlpEncodeBytes</code> RLP encodes a single integer as a fixed-width unsigned byte buffer.</li>
@@ -557,7 +551,7 @@ This is included only for compatibility with the EVM test suite.</p>
     rule</span> #rlpEncodeLength(STR, OFFSET) =&gt; #rlpEncodeLength(STR, OFFSET, Bytes2String(Int2Bytes(lengthString(STR), BE, Unsigned)))<span class="hljs-keyword"> requires</span> lengthString(STR) &gt;=<span class="hljs-keyword">Int</span> <span class="hljs-number">56</span><span class="hljs-keyword">
     rule</span> #rlpEncodeLength(STR, OFFSET, BL) =&gt; chrChar(lengthString(BL) +<span class="hljs-keyword">Int</span> OFFSET +<span class="hljs-keyword">Int</span> <span class="hljs-number">55</span>) +<span class="hljs-keyword">String</span> BL +<span class="hljs-keyword">String</span> STR
 </code></pre>
-<h2>Decoding</h2>
+<h2 id="decoding">Decoding</h2>
 <ul>
 <li><code>#loadLen</code> and <code>#loadOffset</code> decode a <code>WordStack</code> into a single string in an RLP-like encoding which does not allow lists in its structure.</li>
 <li><code>#rlpDecode</code> RLP decodes a single <code>String</code> into a <code>JSON</code>.</li>

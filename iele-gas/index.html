@@ -49,15 +49,7 @@
 <header
   class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar"
 >
-  <a class="logo-link" href="../index.html">
-    <img
-      class="logo-dark"
-      srcset="../assets/img/iele-logo.png"
-      alt="K"
-      style="height: 48px"
-    />
-    Semantic Framework
-  </a>
+  <a class="logo-link" href="../index.html"> IELE Semantics </a>
   <ul class="navbar-nav ml-md-auto">
     <li class="nav-item">
       <a
@@ -71,11 +63,13 @@
       </a>
     </li>
   </ul>
+  <!--
   <a
     class="btn btn-rv-blue d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"
     href="../downloads"
     >Download</a
   >
+  -->
 </header>
 
 
@@ -116,7 +110,7 @@
           class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content"
           role="main"
         >
-          <div class="markdown-preview"><html><head></head><body><h1>IELE Gas Calculation</h1>
+          <div class="markdown-preview"><html><head></head><body><h1 id="iele-gas-calculation">IELE Gas Calculation</h1>
 <p>The following document describes the gas model of IELE. Note that this gas model should
 be considered a first draft and may be subject to changes before deploying IELE on a live blockchain.
 Gas is consumed either by increasing the amount of memory being used, or by the computational effort to execute instructions.</p>
@@ -127,7 +121,7 @@ Gas is consumed either by increasing the amount of memory being used, or by the 
     imports</span> IELE-INFRASTRUCTURE<span class="hljs-keyword">
     imports</span> IELE-PRECOMPILED
 </code></pre>
-<h2>Overall Gas Calculation</h2>
+<h2 id="overall-gas-calculation">Overall Gas Calculation</h2>
 <p>The gas cost of an instruction is the cost incurred from the memory used by the instruction plus the
 computational cost of executing the instruction.</p>
 <ul>
@@ -141,7 +135,7 @@ computational cost of executing the instruction.</p>
     rule</span> &lt;k&gt; G:<span class="hljs-keyword">Int</span> ~&gt; #deductGas =&gt; #exception OUT_OF_GAS ... &lt;/k&gt; &lt;gas&gt; GAVAIL                  &lt;/gas&gt;<span class="hljs-keyword"> requires</span> GAVAIL &lt;<span class="hljs-keyword">Int</span> G<span class="hljs-keyword">
     rule</span> &lt;k&gt; G:<span class="hljs-keyword">Int</span> ~&gt; #deductGas =&gt; .                     ... &lt;/k&gt; &lt;gas&gt; GAVAIL =&gt; GAVAIL -<span class="hljs-keyword">Int</span> G &lt;/gas&gt; &lt;previousGas&gt; _ =&gt; GAVAIL &lt;/previousGas&gt;<span class="hljs-keyword"> requires</span> GAVAIL &gt;=<span class="hljs-keyword">Int</span> G
 </code></pre>
-<h2>Memory Consumption</h2>
+<h2 id="memory-consumption">Memory Consumption</h2>
 <p>The current choices in IELE are similar to those for EVM:</p>
 <ul>
 <li>each contract has a default amount of memory within which to execute;</li>
@@ -166,10 +160,10 @@ register to fit the value computed by the next operator.</li>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> InternalOp ::= <span class="hljs-string">&quot;#memory&quot;</span> <span class="hljs-string">&quot;[&quot;</span> Instruction <span class="hljs-string">&quot;]&quot;</span>
  <span class="hljs-comment">// ---------------------------------------------------</span>
 </code></pre>
-<h3>Expressions</h3>
+<h3 id="expressions">Expressions</h3>
 <p>The size of the result register <code>REG</code> for an arithmetic operation is estimated
 as follows:</p>
-<h4>Bitwise arithmetic</h4>
+<h4 id="bitwise-arithmetic">Bitwise arithmetic</h4>
 <ul>
 <li><code>REG = not W</code> size of bitwise negation of W is the same as that of W.</li>
 <li><code>REG = and W0, W1</code> Size of result is the minimum of the sizes of W0 and W1,
@@ -189,12 +183,12 @@ on the word size because it is a floored logarithm and can be computed using bit
     rule</span> &lt;k&gt; #memory [ REG = shift W0 , W1 ] =&gt; #registerDelta(REG, maxInt(<span class="hljs-number">1</span>, intSize(W0) +<span class="hljs-keyword">Int</span> bitsInWords(W1, SCHED))) ... &lt;/k&gt; &lt;schedule&gt; SCHED &lt;/schedule&gt;<span class="hljs-keyword">
     rule</span> #memory [ REG = log2  W       ] =&gt; #registerDelta(REG, <span class="hljs-number">2</span>)
 </code></pre>
-<h4>Comparison operators</h4>
+<h4 id="comparison-operators">Comparison operators</h4>
 <p>Since the result is boolean, the result size for all comparison operations is 1.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #memory [ REG = iszero _     ] =&gt; #registerDelta(REG, <span class="hljs-number">1</span>)<span class="hljs-keyword">
     rule</span> #memory [ REG = cmp _  _ , _ ] =&gt; #registerDelta(REG, <span class="hljs-number">1</span>)
 </code></pre>
-<h4>Regular arithmetic</h4>
+<h4 id="regular-arithmetic">Regular arithmetic</h4>
 <ul>
 <li><code>REG = add W0, W1</code> and <code>REG = sub W0, W1</code>
 the result can require at most one more memory word than the maximum of the
@@ -215,18 +209,18 @@ multiplied by the exponent.</li>
     rule</span> #memory [ REG = mod W0 , W1 ] =&gt; #registerDelta(REG, minInt(intSize(W0), intSize(W1)))<span class="hljs-keyword">
     rule</span> #memory [ REG = exp W0 , W1 ] =&gt; #registerDelta(REG, #adjustedBitLength(intSize(W0), W0) *<span class="hljs-keyword">Int</span> W1 /<span class="hljs-keyword">Int</span> <span class="hljs-number">64</span>)
 </code></pre>
-<h4>Modular arithmetic</h4>
+<h4 id="modular-arithmetic">Modular arithmetic</h4>
 <p>For all modular arithmetic operations, the size of the result is at most that
 of the modulo operand (W2).</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #memory [ REG = addmod _  , _  , W2 ] =&gt; #registerDelta(REG, intSize(W2))<span class="hljs-keyword">
     rule</span> #memory [ REG = mulmod W0 , W1 , W2 ] =&gt; #registerDelta(REG, intSize(W2))<span class="hljs-keyword">
     rule</span> #memory [ REG = expmod _  , _  , W2 ] =&gt; #registerDelta(REG, intSize(W2))
 </code></pre>
-<h4>SHA3</h4>
+<h4 id="sha3">SHA3</h4>
 <p>Result size of SHA3 is 256 bits, i.e., 4 words.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #memory [ REG = sha3 _ ] =&gt; #registerDelta(REG, bitsInWords(<span class="hljs-number">256</span>, SCHED)) ... &lt;/k&gt; &lt;schedule&gt; SCHED &lt;/schedule&gt;
 </code></pre>
-<h4>Byte access</h4>
+<h4 id="byte-access">Byte access</h4>
 <ul>
 <li><code>REG = byte INDEX, W</code>  the result size is one byte, fitting in one word</li>
 <li><code>REG = sext WIDTH , W</code>, <code>REG = twos WIDTH , W</code>, and <code>REG = bswap WIDTH , W</code>
@@ -237,7 +231,7 @@ the result size is WIDTH bytes, i.e., WIDTH / 8 words.</li>
     rule</span> #memory [ REG = twos  WIDTH , _ ] =&gt; #registerDelta(REG, bytesInWords(chop(WIDTH)))<span class="hljs-keyword">
     rule</span> #memory [ REG = bswap WIDTH , _ ] =&gt; #registerDelta(REG, bytesInWords(chop(WIDTH)))
 </code></pre>
-<h4>Local state operations</h4>
+<h4 id="local-state-operations">Local state operations</h4>
 <p>Operations whose result should fit into a word.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #memory [ REG = call @iele.gas         ( .Ints ) ] =&gt; #registerDelta(REG, <span class="hljs-number">1</span>)<span class="hljs-keyword">
     rule</span> #memory [ REG = call @iele.gasprice    ( .Ints ) ] =&gt; #registerDelta(REG, <span class="hljs-number">1</span>)<span class="hljs-keyword">
@@ -261,14 +255,14 @@ the result size is WIDTH bytes, i.e., WIDTH / 8 words.</li>
     rule</span> &lt;k&gt; #memory [ REG = call @iele.blockhash   ( _     ) ] =&gt; #registerDelta(REG, bitsInWords(<span class="hljs-number">256</span>, SCHED)) ... &lt;/k&gt; &lt;schedule&gt; SCHED &lt;/schedule&gt;<span class="hljs-keyword">
     rule</span> &lt;k&gt; #memory [ REG = call @iele.balance     ( _     ) ] =&gt; #registerDelta(REG, bitsInWords(<span class="hljs-number">256</span>, SCHED)) ... &lt;/k&gt; &lt;schedule&gt; SCHED &lt;/schedule&gt;
 </code></pre>
-<h4>Assignment operations</h4>
+<h4 id="assignment-operations">Assignment operations</h4>
 <p>The memory cost of assigning a register or immediate to a register is the cost associated with
 resizing the register to equal the value being assigned.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #memory [ DEST = % SRC:<span class="hljs-keyword">Int</span> ] =&gt; #registerDelta(DEST, intSize(getInt(REGS [ SRC ]))) ... &lt;/k&gt;
          &lt;regs&gt; REGS &lt;/regs&gt;<span class="hljs-keyword">
     rule</span> &lt;k&gt; #memory [ DEST = SRC:<span class="hljs-keyword">Int</span> ] =&gt; #registerDelta(DEST, intSize(SRC)) ... &lt;/k&gt;
 </code></pre>
-<h3>Function Call/Return</h3>
+<h3 id="function-call%2Freturn">Function Call/Return</h3>
 <p>The memory cost of a function call is the cost of initializing a new set of registers plus the cost of
 saving the return address and other information on the function stack. The latter is a constant.
 For the former, each register used by the function call consumes one word by default, except for the parameters
@@ -297,7 +291,7 @@ caller&apos;s registers, but that is handled in <code>iele.md</code>.</p>
          &lt;funcId&gt; NAME &lt;/funcId&gt;
          &lt;nregs&gt; NREGS &lt;/nregs&gt;
 </code></pre>
-<h3>Memory operations</h3>
+<h3 id="memory-operations">Memory operations</h3>
 <ul>
 <li><code>REG = load INDEX1 , INDEX2 , WIDTH</code>
 We resize the return register to fit the loaded data</li>
@@ -321,7 +315,7 @@ the memory cell at INDEX needs to be resized to store VALUE</li>
       requires</span> notBool INDEX in_keys(LM)<span class="hljs-keyword">
     rule</span> #memory [ store VALUE ,  INDEX ] =&gt; #memoryDelta(INDEX, intSize(VALUE))
 </code></pre>
-<h3>Storage</h3>
+<h3 id="storage">Storage</h3>
 <p>Storage contains arbitrary-precision values, therefore the memory cost of loading a value from storage
 is the cost associated with resizing the register to equal the value contained in storage.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #memory [ REG = sload INDEX ] =&gt; #registerDelta(REG, intSize(VALUE)) ... &lt;/k&gt;
@@ -344,7 +338,7 @@ is the cost associated with resizing the register to equal the value contained i
 <p>Storing to storage incurs no memory cost (its disk cost is included in its computational cost).</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #memory [ sstore _ , _   ] =&gt; .
 </code></pre>
-<h3>Miscellaneous</h3>
+<h3 id="miscellaneous">Miscellaneous</h3>
 <p>The following instructions do not incur any memory costs as they either do not return a value and do not write to memory,
 or else their memory cost is paid after the instruction executes.</p>
 <p>For example, <code>revert</code>, <code>ret</code>, <code>call</code>, <code>staticcall</code>, <code>create</code>, and <code>copycreate</code> each invoke <code>#registerDelta</code> directly
@@ -456,7 +450,7 @@ free in each contract call frame.</li>
     rule</span> Cmem(SCHED, N)  =&gt; (Cpricedmem(SCHED, N) *<span class="hljs-keyword">Int</span> Gmemory &lt; SCHED &gt;) +<span class="hljs-keyword">Int</span> ((Cpricedmem(SCHED, N) *<span class="hljs-keyword">Int</span> Cpricedmem(SCHED, N)) /<span class="hljs-keyword">Int</span> Gquadcoeff &lt; SCHED &gt;)<span class="hljs-keyword">
     rule</span> Cpricedmem(SCHED, N) =&gt; maxInt(<span class="hljs-number">0</span>, N -<span class="hljs-keyword">Int</span> Smemallowance &lt; SCHED &gt; )
 </code></pre>
-<h2>Execution Gas</h2>
+<h2 id="execution-gas">Execution Gas</h2>
 <p>Each opcode has an intrinsic gas cost of execution as well.</p>
 <ul>
 <li><code>#compute</code> loads all the relevant surronding state and uses that to compute the intrinsic execution gas of each opcode.</li>
@@ -465,8 +459,8 @@ free in each contract call frame.</li>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> InternalOp ::= <span class="hljs-string">&quot;#compute&quot;</span> <span class="hljs-string">&quot;[&quot;</span> Instruction <span class="hljs-string">&quot;,&quot;</span> Schedule <span class="hljs-string">&quot;]&quot;</span>
  <span class="hljs-comment">// -----------------------------------------------------------------</span>
 </code></pre>
-<h3>Expressions</h3>
-<h4>Bitwise arithmetic</h4>
+<h3 id="expressions-1">Expressions</h3>
+<h4 id="bitwise-arithmetic-1">Bitwise arithmetic</h4>
 <p>The bitwise expressions have a constant cost plus a linear factor in the number of words manipulated.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #compute [ _ = not   W,       SCHED ] =&gt; Gnot &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> intSize(W) *<span class="hljs-keyword">Int</span> Gnotword &lt; SCHED &gt;<span class="hljs-keyword">
     rule</span> #compute [ _ = and   W0 , W1, SCHED ] =&gt; Gbitwise &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> minInt(intSize(W0), intSize(W1)) *<span class="hljs-keyword">Int</span> Gbitwiseword &lt; SCHED &gt;<span class="hljs-keyword">
@@ -475,12 +469,12 @@ free in each contract call frame.</li>
     rule</span> #compute [ _ = shift W0 , W1, SCHED ] =&gt; Gbitwise &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> maxInt(<span class="hljs-number">1</span>, intSize(W0) +<span class="hljs-keyword">Int</span> bitsInWords(W1, SCHED)) *<span class="hljs-keyword">Int</span> Gbitwiseword &lt; SCHED &gt;<span class="hljs-keyword">
     rule</span> #compute [ _ = log2 W,        SCHED ] =&gt; Glogarithm &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> intSize(W) *<span class="hljs-keyword">Int</span> Glogarithmword &lt; SCHED &gt;
 </code></pre>
-<h4>Comparison operators</h4>
+<h4 id="comparison-operators-1">Comparison operators</h4>
 <p><code>iszero</code> has a constant cost, whereas <code>cmp</code> has a constant cost and a linear factor in the smaller of the two sizes.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #compute [ _ = iszero W,      SCHED ] =&gt; Giszero &lt; SCHED &gt;<span class="hljs-keyword">
     rule</span> #compute [ _ = cmp _ W0 , W1, SCHED ] =&gt; Gcmp &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> minInt(intSize(W0), intSize(W1)) *<span class="hljs-keyword">Int</span> Gcmpword &lt; SCHED &gt;
 </code></pre>
-<h4>Regular arithmetic</h4>
+<h4 id="regular-arithmetic-1">Regular arithmetic</h4>
 <ul>
 <li><code>add</code> and <code>sub</code> have a linear cost in the larger of the two sizes.</li>
 <li><code>mul</code>, <code>div</code>, <code>mod</code> and <code>exp</code> have more complicated costs, which are
@@ -493,7 +487,7 @@ detailed elswhere.</li>
     rule</span> #compute [ _ = mod W0 , W1, SCHED ] =&gt; Cdiv(SCHED, intSize(W0), intSize(W1))<span class="hljs-keyword">
     rule</span> #compute [ _ = exp W0 , W1, SCHED ] =&gt; Cexp(SCHED, intSize(W0), W0, W1)
 </code></pre>
-<h4>Modular arithmetic</h4>
+<h4 id="modular-arithmetic-1">Modular arithmetic</h4>
 <ul>
 <li><code>addmod</code> is the cost of an addition plus the cost of the modulus.</li>
 <li><code>mulmod</code> is the cost of two moduli, plus a multiplication, plus another
@@ -504,7 +498,7 @@ modulus.</li>
     rule</span> #compute [ _ = mulmod W0 , W1 , W2, SCHED ] =&gt; Cmul(SCHED, intSize(W0), intSize(W1)) +<span class="hljs-keyword">Int</span> Cdiv(SCHED, intSize(W0) +<span class="hljs-keyword">Int</span> intSize(W1), intSize(W2))<span class="hljs-keyword">
     rule</span> #compute [ _ = expmod W0 , W1 , W2, SCHED ] =&gt; Cexpmod(SCHED, intSize(W0), intSize(W1), intSize(W2), W2)
 </code></pre>
-<h4>SHA3</h4>
+<h4 id="sha3-1">SHA3</h4>
 <p>The cost of hashing a memory cell is equal to a constant plus the size of the cell in words.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #compute [ _ = sha3 W0, SCHED ] =&gt; Gsha3 &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> bytesInWords(lengthBytes(LM)) *<span class="hljs-keyword">Int</span> Gsha3word &lt; SCHED &gt; ... &lt;/k&gt;
          &lt;localMem&gt;... W0 |-&gt; LM ...&lt;/localMem&gt;<span class="hljs-keyword">
@@ -513,7 +507,7 @@ modulus.</li>
          &lt;localMem&gt; LM &lt;/localMem&gt;<span class="hljs-keyword">
       requires</span> notBool W0 in_keys(LM)
 </code></pre>
-<h4>Byte access</h4>
+<h4 id="byte-access-1">Byte access</h4>
 <ul>
 <li><code>byte</code> has a constant cost.</li>
 <li><code>twos</code>, <code>sext</code>, and <code>bswap</code> have a constant cost plus a linear factor in the <code>WIDTH</code> parameter.</li>
@@ -523,7 +517,7 @@ modulus.</li>
     rule</span> #compute [ _ = sext  WIDTH, _, SCHED ] =&gt; Gsext  &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> maxInt(<span class="hljs-number">1</span>, bytesInWords(chop(WIDTH))) *<span class="hljs-keyword">Int</span> Gsextword  &lt; SCHED &gt;<span class="hljs-keyword">
     rule</span> #compute [ _ = bswap WIDTH, _, SCHED ] =&gt; Gbswap &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> maxInt(<span class="hljs-number">1</span>, bytesInWords(chop(WIDTH))) *<span class="hljs-keyword">Int</span> Gbswapword &lt; SCHED &gt;
 </code></pre>
-<h4>Local state operations</h4>
+<h4 id="local-state-operations-1">Local state operations</h4>
 <p>Each of these operations merely reads a constant value from the execution context.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #compute [ _ = call @iele.gas         ( _ ), SCHED ] =&gt; Greadstate &lt; SCHED &gt;<span class="hljs-keyword">
     rule</span> #compute [ _ = call @iele.gasprice    ( _ ), SCHED ] =&gt; Greadstate &lt; SCHED &gt;<span class="hljs-keyword">
@@ -542,13 +536,13 @@ modulus.</li>
 <p>The blockhash function looks up state in the blockchain, and is therefore more expensive than the other builtin functions.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #compute [ _ = call @iele.blockhash   ( _ ), SCHED ] =&gt; Gblockhash &lt; SCHED &gt;
 </code></pre>
-<h4>Network state operations</h4>
+<h4 id="network-state-operations">Network state operations</h4>
 <p>Each of these operations pays a constant cost to look up information about an account on the network.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #compute [ _ = call @iele.balance     ( _ ), SCHED ] =&gt; Gbalance     &lt; SCHED &gt;<span class="hljs-keyword">
     rule</span> #compute [ _ = call @iele.extcodesize ( _ ), SCHED ] =&gt; Gextcodesize &lt; SCHED &gt;<span class="hljs-keyword">
     rule</span> #compute [ _ = calladdress _ at _,           SCHED ] =&gt; Gcalladdress &lt; SCHED &gt;
 </code></pre>
-<h4>Assignment operations</h4>
+<h4 id="assignment-operations-1">Assignment operations</h4>
 <p>The cost to load a value into a register is simply the cost to copy its value.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #compute [ DEST = % SRC:<span class="hljs-keyword">Int</span>, SCHED ] =&gt; Gmove &lt; SCHED &gt; *<span class="hljs-keyword">Int</span> intSize(getInt(REGS [ SRC ])) ... &lt;/k&gt;
          &lt;regs&gt; REGS &lt;/regs&gt;<span class="hljs-keyword">
@@ -564,13 +558,13 @@ modulus.</li>
     rule</span> &lt;k&gt; #compute [ DEST = SRC:<span class="hljs-keyword">Int</span>, SCHED ] =&gt; Gmove &lt; SCHED &gt; ... &lt;/k&gt;<span class="hljs-keyword">
       requires</span> Gnewmove &lt;&lt; SCHED &gt;&gt;
 </code></pre>
-<h3>Jump statements</h3>
+<h3 id="jump-statements">Jump statements</h3>
 <p>The cost of jumping to a label, both conditionally and unconditionally, is a constant,
 but the cost of a conditional jump is slightly higher since it must test the register against zero.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> #compute [ br _, SCHED ] =&gt; Gbr &lt; SCHED &gt;<span class="hljs-keyword">
     rule</span> #compute [ br _ , _, SCHED ] =&gt; Gbrcond &lt; SCHED &gt;
 </code></pre>
-<h3>Function Call/Return</h3>
+<h3 id="function-call%2Freturn-1">Function Call/Return</h3>
 <p>The cost of an intra-contract call is the cost to initialize the new set of registers, the cost to copy the arguments to the call frame, and the
 constant cost to perform the jump and store the return address.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #compute [ _ = call @ NAME ( ARGS ), SCHED ] =&gt; Gcallreg &lt; SCHED &gt; *<span class="hljs-keyword">Int</span> REGISTERS +<span class="hljs-keyword">Int</span> intSizes(ARGS) *<span class="hljs-keyword">Int</span> Gmove &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> Glocalcall &lt; SCHED &gt; ... &lt;/k&gt;
@@ -615,7 +609,7 @@ constant cost to perform the jump and store the return address.</p>
     rule</span> &lt;k&gt; #compute [ _, RETS::LValues = staticcall _ at ACCTTO ( ARGS ) gaslimit GCAP, SCHED ] =&gt; Ccall(SCHED, #accountEmpty(ACCTTO), GCAP *<span class="hljs-keyword">Int</span> Sgasdivisor &lt; SCHED &gt;, GAVAIL, <span class="hljs-number">0</span>, #sizeLVals(RETS), Ccallarg(SCHED, ARGS)) ... &lt;/k&gt;
          &lt;gas&gt; GAVAIL &lt;/gas&gt;
 </code></pre>
-<h3>Logging</h3>
+<h3 id="logging">Logging</h3>
 <p>The cost of logging is similar to the cost in EVM: a constant ccost plus a cost per byte of unindexed data plus a cost per indexed log topic.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #compute [ log IDX, SCHED ]                                 =&gt; (Glog &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> (Glogdata &lt; SCHED &gt; *<span class="hljs-keyword">Int</span> bytesInWords(lengthBytes(LM))) +<span class="hljs-keyword">Int</span> (<span class="hljs-number">0</span> *<span class="hljs-keyword">Int</span> Glogtopic &lt; SCHED &gt;)) ... &lt;/k&gt; &lt;localMem&gt;... IDX |-&gt; LM ...&lt;/localMem&gt;<span class="hljs-keyword">
     rule</span> &lt;k&gt; #compute [ log IDX , _:<span class="hljs-keyword">Int</span>, SCHED ]                         =&gt; (Glog &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> (Glogdata &lt; SCHED &gt; *<span class="hljs-keyword">Int</span> bytesInWords(lengthBytes(LM))) +<span class="hljs-keyword">Int</span> (<span class="hljs-number">1</span> *<span class="hljs-keyword">Int</span> Glogtopic &lt; SCHED &gt;)) ... &lt;/k&gt; &lt;localMem&gt;... IDX |-&gt; LM ...&lt;/localMem&gt;<span class="hljs-keyword">
@@ -630,7 +624,7 @@ constant cost to perform the jump and store the return address.</p>
          &lt;localMem&gt; LM (.Map =&gt; IDX |-&gt; .Bytes) &lt;/localMem&gt;<span class="hljs-keyword">
       requires</span> notBool IDX in_keys(LM)
 </code></pre>
-<h3>Local Memory</h3>
+<h3 id="local-memory">Local Memory</h3>
 <ul>
 <li><code>load</code> pays a constant cost plus a cost per word loaded. The constant cost is higher if we must compute the width to be loaded dynamically.</li>
 <li><code>store</code> pays a constant cost plus a cost per word stored. The constant cost is higher if we must compute the width to be stored dynamically.</li>
@@ -646,7 +640,7 @@ constant cost to perform the jump and store the return address.</p>
     rule</span> #compute [ store VALUE , INDEX, SCHED ] =&gt; Gstorecell &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> intSize(VALUE) *<span class="hljs-keyword">Int</span> Gstoreword &lt; SCHED &gt;<span class="hljs-keyword">
     rule</span> #compute [ store VALUE , INDEX , OFFSET , WIDTH, SCHED ] =&gt; Gstore &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> bytesInWords(WIDTH) *<span class="hljs-keyword">Int</span> Gstoreword &lt; SCHED &gt;
 </code></pre>
-<h3>Storage</h3>
+<h3 id="storage-1">Storage</h3>
 <ul>
 <li><code>sload</code> pays a constant cost plus a cost per word in the key, plus a cost per word loaded.</li>
 </ul>
@@ -678,7 +672,7 @@ constant cost to perform the jump and store the return address.</p>
          &lt;/account&gt;<span class="hljs-keyword">
       requires</span> notBool INDEX in_keys(STORAGE)
 </code></pre>
-<h3>Contract creation and destruction</h3>
+<h3 id="contract-creation-and-destruction">Contract creation and destruction</h3>
 <ul>
 <li><code>create</code> pays a constant cost to initialize the account, a cost to copy the arguments of the constructor, plus a stipend to the constructor of 63/64ths of the current gas.</li>
 <li><code>copycreate</code> pays a very similar cost to <code>create</code> but with a slightly higher constant because the account code must be looked up on the blockchain.</li>
@@ -697,7 +691,7 @@ constant cost to perform the jump and store the return address.</p>
            ...
          &lt;/account&gt;
 </code></pre>
-<h3>Precompiled Contracts</h3>
+<h3 id="precompiled-contracts">Precompiled Contracts</h3>
 <p>Each of the precompiled contracts pays a fixed cost per word of data passed to the contract plus a constant.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #compute [ ECREC, SCHED ]  =&gt; Gecrec &lt; SCHED &gt; ... &lt;/k&gt;<span class="hljs-keyword">
     rule</span> &lt;k&gt; #compute [ SHA256, SCHED ] =&gt; Gsha256 &lt; SCHED &gt; +<span class="hljs-keyword">Int</span> Gsha256word &lt; SCHED &gt; *<span class="hljs-keyword">Int</span> bytesInWords(maxInt(LEN, intSize(DATA))) ... &lt;/k&gt; &lt;callData&gt; LEN , DATA , .Ints &lt;/callData&gt;<span class="hljs-keyword">
@@ -860,7 +854,7 @@ constant cost to perform the jump and store the return address.</p>
       [owise]
 
 </code></pre>
-<h4>Approximating <code>x^log_2 3</code></h4>
+<h4 id="approximating-x%5Elog_2-3">Approximating <code>x^log_2 3</code></h4>
 <p>Say we want to approximate <code>x^log_2 3</code> with a family of quadratic functions, say of the form <code>a2*x^2+a1*x+a0</code>.</p>
 <ul>
 <li>we use the fact that <code>(2^k)^(log 3 / log 2) = 3^k</code></li>
@@ -879,7 +873,7 @@ constant cost to perform the jump and store the return address.</p>
                          #else                        N *<span class="hljs-keyword">Int</span> N /<span class="hljs-keyword">Int</span> <span class="hljs-number">16</span> +<span class="hljs-keyword">Int</span> <span class="hljs-number">432</span> *<span class="hljs-keyword">Int</span> N -<span class="hljs-keyword">Int</span> <span class="hljs-number">197376</span>
                          #fi #fi
 </code></pre>
-<h4>Approximating exponentiation</h4>
+<h4 id="approximating-exponentiation">Approximating exponentiation</h4>
 <p>Exponentiation algorithms work by sucessively performing at most two multiplication operations per bit in the exponent.</p>
 <p>Because exponents could be very large, we approximate this length by counting the number of words in the exponent and multiplying by 64,
 the number of bits in a word. However, in order to create more precision on smaller inputs, if the number is less than 2^64,
@@ -895,7 +889,7 @@ which is used to compute a more accurate approximation of the length of the resu
     rule</span> #adjustedBitLength(N) =&gt; log2Int(N) [owise]
 
 </code></pre>
-<h2>Gas Model Parameters</h2>
+<h2 id="gas-model-parameters">Gas Model Parameters</h2>
 <p>The IELE semantics is designed to be extensible in future hard forks while still maintaining an accurate semantics of the language prior
 to the fork. As such, we introduce a number of parameters to the gas model which are dependent on the gas schedule used.
 Here we introduce only two gas schedules, the &quot;DEFAULT&quot; schedule, provided solely for backwards-compatibility with the EVM VMTests test suite,
@@ -927,7 +921,7 @@ You can specify which profile is used by passing in the argument <code>-cSCHEDUL
                            | <span class="hljs-string">&quot;Sgasdivisor&quot;</span> | <span class="hljs-string">&quot;Smemallowance&quot;</span>
  <span class="hljs-comment">// ---------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
 </code></pre>
-<h3>Default Schedule</h3>
+<h3 id="default-schedule">Default Schedule</h3>
 <p>This schedule is used to execute the EVM VM tests, and contains minor variations from the actual schedule used for execution.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> Schedule ::= <span class="hljs-string">&quot;DEFAULT&quot;</span> [klabel(DEFAULT), symbol] 
  <span class="hljs-comment">// -------------------------------------------------------</span><span class="hljs-keyword">
@@ -1027,7 +1021,7 @@ You can specify which profile is used by passing in the argument <code>-cSCHEDUL
     rule</span> Smemallowance  &lt; DEFAULT &gt; =&gt; <span class="hljs-number">4096</span><span class="hljs-keyword">
     rule</span> Sgasdivisor    &lt; DEFAULT &gt; =&gt; <span class="hljs-number">1</span>
 </code></pre>
-<h3>Albe Schedule</h3>
+<h3 id="albe-schedule">Albe Schedule</h3>
 <p>This is the initial schedule of IELE.</p>
 <pre class="hljs"><code> <span class="hljs-comment">// Albe</span>
  <span class="hljs-comment">// --------------------------</span><span class="hljs-keyword">
@@ -1039,7 +1033,7 @@ You can specify which profile is used by passing in the argument <code>-cSCHEDUL
     rule</span> Gstaticcalldepth        &lt;&lt; ALBE &gt;&gt; =&gt; false<span class="hljs-keyword">
     rule</span> SCHEDCONST              &lt;&lt; ALBE &gt;&gt; =&gt; SCHEDCONST &lt;&lt; DEFAULT &gt;&gt; [owise]
 </code></pre>
-<h3>Danse Schedule</h3>
+<h3 id="danse-schedule">Danse Schedule</h3>
 <p>This is the first major revision of IELE.</p>
 <pre class="hljs"><code> <span class="hljs-comment">// Danse</span>
  <span class="hljs-comment">// ---------------------------</span><span class="hljs-keyword">

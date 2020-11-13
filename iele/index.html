@@ -49,15 +49,7 @@
 <header
   class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar"
 >
-  <a class="logo-link" href="../index.html">
-    <img
-      class="logo-dark"
-      srcset="../assets/img/iele-logo.png"
-      alt="K"
-      style="height: 48px"
-    />
-    Semantic Framework
-  </a>
+  <a class="logo-link" href="../index.html"> IELE Semantics </a>
   <ul class="navbar-nav ml-md-auto">
     <li class="nav-item">
       <a
@@ -71,11 +63,13 @@
       </a>
     </li>
   </ul>
+  <!--
   <a
     class="btn btn-rv-blue d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"
     href="../downloads"
     >Download</a
   >
+  -->
 </header>
 
 
@@ -116,7 +110,7 @@
           class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content"
           role="main"
         >
-          <div class="markdown-preview"><html><head></head><body><h1>IELE Execution</h1>
+          <div class="markdown-preview"><html><head></head><body><h1 id="iele-execution">IELE Execution</h1>
 <p>IELE is a register-based abstract machine over some simple opcodes.
 Most of the opcodes are &quot;local&quot; to the execution state of the machine, but some of them must interact with the world state.
 This file only defines the local execution operations. A separate <code>cardano.md</code> will eventually be created to describe the remainder
@@ -133,7 +127,7 @@ module</span> IELE-CONFIGURATION<span class="hljs-keyword">
     imports</span> IELE-WELL-FORMEDNESS<span class="hljs-keyword">
     imports</span> DEFAULT-CONFIGURATION
 </code></pre>
-<h2>Configuration</h2>
+<h2 id="configuration">Configuration</h2>
 <p>We&apos;ve broken up the configuration into two components; those parts of the state that mutate during execution of a single transaction and those that are static throughout.
 In the comments next to each cell, we explain the purpose of the cell.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    configuration</span> &lt;k/&gt;                                               <span class="hljs-comment">// Current computation</span>
@@ -271,7 +265,7 @@ In the comments next to each cell, we explain the purpose of the cell.</p>
     syntax</span> Contract ::= <span class="hljs-string">&quot;#emptyCode&quot;</span>
  <span class="hljs-comment">// --------------------------------</span>
 </code></pre>
-<h3>Uninitialized Accounts</h3>
+<h3 id="uninitialized-accounts">Uninitialized Accounts</h3>
 <p>An account to which code has never been deployed has a size in bytes of zero, but contains an implicit public function <code>@deposit</code> which takes
 no arguments, returns no values, and does nothing. This function exists to allow accounts to receive payment even if they do not have a contract
 deployed to them. Note that a contract can forbid payments by refusing to declare the <code>@deposit</code> function, and explicitly raising an exception
@@ -330,7 +324,7 @@ an address for which anybody knows a private key.</p>
     imports</span> IELE-CONFIGURATION<span class="hljs-keyword">
     imports</span> IELE-CONSTANTS
 </code></pre>
-<h2>Hardware</h2>
+<h2 id="hardware">Hardware</h2>
 <p>The <code>callStack</code> cell stores a list of previous VM execution states.</p>
 <ul>
 <li><code>#pushCallStack</code> saves a copy of VM execution state on the <code>callStack</code>.</li>
@@ -460,7 +454,7 @@ an address for which anybody knows a private key.</p>
     rule</span> #regRange(N, <span class="hljs-number">1</span>) =&gt; % N , .LValues<span class="hljs-keyword">
     rule</span> #regRange(N, M) =&gt; % N , #regRange(N +<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>, M -<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>) [owise]
 </code></pre>
-<h3>Execution Step</h3>
+<h3 id="execution-step">Execution Step</h3>
 <p>When an instruction reaches the top of the K cell, we first heat its registers, then compute gas cost, then execute the instruction itself.</p>
 <pre class="hljs"><code><span class="hljs-keyword">    syntax</span> InternalOp ::= <span class="hljs-string">&quot;#exec&quot;</span> Instruction
                         | <span class="hljs-string">&quot;#gas&quot;</span> <span class="hljs-string">&quot;[&quot;</span> Instruction <span class="hljs-string">&quot;]&quot;</span> 
@@ -490,7 +484,7 @@ an address for which anybody knows a private key.</p>
     rule</span> #addr?(log CELL, ARGS)                                             =&gt; log chop(CELL), ARGS<span class="hljs-keyword">
     rule</span> #addr?(OP)                                                         =&gt; OP [owise]
 </code></pre>
-<h3>Internal Operations</h3>
+<h3 id="internal-operations">Internal Operations</h3>
 <ul>
 <li><code>#loadAccount_</code> allows declaring a new empty account with the given address (and assumes the rounding to 160 bits has already occured).
 If the account already exists with non-zero nonce or non-empty code, an exception is thrown.
@@ -605,7 +599,7 @@ Otherwise, if the account already exists, the storage is cleared.</li>
       requires</span> VALUE &lt;=<span class="hljs-keyword">Int</span> ORIGFROM<span class="hljs-keyword">
 endmodule</span>
 </code></pre>
-<h2>Instruction Execution Cycle</h2>
+<h2 id="instruction-execution-cycle">Instruction Execution Cycle</h2>
 <ul>
 <li><code>#execute</code> loads the code of the currently-executing function into the <code>k</code> cell, where it executes until the function returns.
 It is an exception if we try to execute a function that does not exist.</li>
@@ -642,7 +636,7 @@ the instruction doesn&apos;t execute a transfer of control flow).</li>
 <pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; .Instructions BLOCKS::LabeledBlocks =&gt; BLOCKS ... &lt;/k&gt;
          &lt;typeChecking&gt; false &lt;/typeChecking&gt;
 </code></pre>
-<h3>Exceptional Ops</h3>
+<h3 id="exceptional-ops">Exceptional Ops</h3>
 <p>Some checks if an opcode will throw an exception are relatively quick and done up front.</p>
 <ul>
 <li><code>#exceptional?</code> checks if the operator is invalid.</li>
@@ -692,7 +686,7 @@ the instruction doesn&apos;t execute a transfer of control flow).</li>
     rule</span> &lt;k&gt; #negativeCall? [ _ , _ = create     _ ( _ ) send % REG ]          =&gt; #if getInt(REGS [ REG ]) &lt;<span class="hljs-keyword">Int</span> <span class="hljs-number">0</span> #then #exception USER_ERROR #else . #fi ... &lt;/k&gt; &lt;regs&gt; REGS &lt;/regs&gt;<span class="hljs-keyword">
     rule</span> &lt;k&gt; #negativeCall? [ _ , _ = copycreate _ ( _ ) send % REG ]          =&gt; #if getInt(REGS [ REG ]) &lt;<span class="hljs-keyword">Int</span> <span class="hljs-number">0</span> #then #exception USER_ERROR #else . #fi ... &lt;/k&gt; &lt;regs&gt; REGS &lt;/regs&gt;
 </code></pre>
-<h3>Substate Log</h3>
+<h3 id="substate-log">Substate Log</h3>
 <p>After executing a transaction, it&apos;s necessary to have the effect of the substate log recorded.</p>
 <ul>
 <li><code>#finalizeTx</code> makes the substate log actually have an effect on the state.</li>
@@ -741,15 +735,15 @@ the instruction doesn&apos;t execute a transfer of control flow).</li>
 
     rule</span> #deleteAccounts(.List) =&gt; .
 </code></pre>
-<h1>IELE Programs</h1>
+<h1 id="iele-programs">IELE Programs</h1>
 <p>Lists of instructions form functions in a contract.</p>
-<h2>IELE Instructions</h2>
+<h2 id="iele-instructions">IELE Instructions</h2>
 <p>Each subsection has a different class of instructions.
 Organization is based roughly on what parts of the execution state are needed to compute the result of each operator.</p>
-<h3>Invalid Operator</h3>
+<h3 id="invalid-operator">Invalid Operator</h3>
 <p>We use an explicit call to <code>@iele.invalid</code> both for marking the designated invalid operator and for garbage bytes in the input program.
 Executing the INVALID instruction results in an exception.</p>
-<h3>Register Manipulations</h3>
+<h3 id="register-manipulations">Register Manipulations</h3>
 <p>Some operators don&apos;t calculate anything, they just manipulate the state of registers.</p>
 <ul>
 <li>
@@ -779,7 +773,7 @@ Executing the INVALID instruction results in an exception.</p>
     rule</span> &lt;k&gt; #loads (REG , REGS) .Ints            =&gt; #exception FUNC_WRONG_SIG             ... &lt;/k&gt;<span class="hljs-keyword">
     rule</span> &lt;k&gt; #loads .LValues     (VALUE , VALUES) =&gt; #exception FUNC_WRONG_SIG             ... &lt;/k&gt;
 </code></pre>
-<h3>Local Memory</h3>
+<h3 id="local-memory">Local Memory</h3>
 <p>These operations are getters/setters of the local execution memory.</p>
 <ul>
 <li><code>REG = load CELL, OFFSET, WIDTH</code> loads WIDTH bytes starting at OFFSET in the specified memory CELL into REG, interpreted as a signed integer.</li>
@@ -815,7 +809,7 @@ Executing the INVALID instruction results in an exception.</p>
     rule</span> &lt;k&gt; #exec store VALUE , CELL =&gt; . ... &lt;/k&gt;
          &lt;localMem&gt; LM =&gt; #if VALUE ==<span class="hljs-keyword">Int</span> <span class="hljs-number">0</span> andBool notBool CELL in_keys(LM) #then LM #else LM [ CELL &lt;- Int2Bytes(VALUE, LE, Signed) ] #fi &lt;/localMem&gt;
 </code></pre>
-<h3>Expressions</h3>
+<h3 id="expressions">Expressions</h3>
 <p>Expression calculations are simple and don&apos;t require anything but the arguments from the <code>regs</code> to operate.</p>
 <ul>
 <li>
@@ -937,7 +931,7 @@ Executing the INVALID instruction results in an exception.</p>
     rule</span> &lt;k&gt; #exec REG = cmp ne W0 , W1 =&gt; #load REG <span class="hljs-number">0</span> ... &lt;/k&gt;<span class="hljs-keyword">  requires</span> W0 ==<span class="hljs-keyword">Int</span>  W1
 
 </code></pre>
-<h3>Hashing</h3>
+<h3 id="hashing">Hashing</h3>
 <p>The sha3 instruction computes the keccak256 hash of an entire memory cell.</p>
 <pre class="hljs"><code><span class="hljs-keyword">
     rule</span> &lt;k&gt; #exec REG = sha3 MEMINDEX =&gt; #load REG keccak(LM) ... &lt;/k&gt;
@@ -946,7 +940,7 @@ Executing the INVALID instruction results in an exception.</p>
          &lt;localMem&gt; LM &lt;/localMem&gt;<span class="hljs-keyword">
       requires</span> notBool MEMINDEX in_keys(LM)
 </code></pre>
-<h3>Local State</h3>
+<h3 id="local-state">Local State</h3>
 <p>These operators make queries about the current execution state.</p>
 <ul>
 <li><code>REG = call @iele.gas()</code> returns the gas remaining after executing the current instruction.</li>
@@ -992,7 +986,7 @@ Executing the INVALID instruction results in an exception.</p>
     rule</span> #blockhash(ListItem(H) _, N, N, _) =&gt; H<span class="hljs-keyword">
     rule</span> #blockhash(ListItem(_) L, N, HI, A) =&gt; #blockhash(L, N, HI -<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>, A +<span class="hljs-keyword">Int</span> <span class="hljs-number">1</span>) [owise]
 </code></pre>
-<h3>Branch and Local Call</h3>
+<h3 id="branch-and-local-call">Branch and Local Call</h3>
 <p>The <code>br</code> instruction jumps to a specified label, either unconditionally, or if its argument is nonzero.</p>
 <p>The call instruction for local calls (i.e. the form which does not specify an account, value, or gas limit), calls a function in the current contract.
 The called function executes in the same contract call frame (i.e. with the same value, gas limit, and memory), but with a fresh set of local registers.
@@ -1059,7 +1053,7 @@ When execution of the callee reaches a <code>ret</code> instruction, control ret
     rule</span> isIeleBuiltin(iele.ecpairing) =&gt; true<span class="hljs-keyword">
     rule</span> isIeleBuiltin( ... ) =&gt; false [owise]
 </code></pre>
-<h3><code>ret</code> and <code>revert</code></h3>
+<h3 id="ret-and-revert"><code>ret</code> and <code>revert</code></h3>
 <ul>
 <li><code>ret</code> returns the values contained in the specified list of registers to the caller.
 If we are executing inside a previous local call, the contract call frame persists unchanged, and only the instruction position and local register are affected.
@@ -1078,7 +1072,7 @@ If we are executing at the top-level local call of a contract call frame, we ret
     rule</span> &lt;k&gt; #exec revert VALUE =&gt; #revert VALUE ... &lt;/k&gt;
          &lt;output&gt; _ =&gt; .Ints &lt;/output&gt;
 </code></pre>
-<h3>Log Operations</h3>
+<h3 id="log-operations">Log Operations</h3>
 <p>During execution of a transaction some things are recorded in the substate log.
 This is a right cons-list of <code>SubstateLogEntry</code> (which contains the account ID along with the specified portions of the <code>wordStack</code> and <code>localMem</code>).</p>
 <p>The <code>log</code> instruction logs an entire memory cell to the substate log with zero to four log topics.</p>
@@ -1098,9 +1092,9 @@ This is a right cons-list of <code>SubstateLogEntry</code> (which contains the a
          &lt;localMem&gt;... MEMINDEX |-&gt; LM ...&lt;/localMem&gt;
          &lt;logData&gt; ... (.List =&gt; ListItem({ ACCT | TOPICS | LM })) &lt;/logData&gt;
 </code></pre>
-<h2>Network Ops</h2>
+<h2 id="network-ops">Network Ops</h2>
 <p>Operators that require access to the rest of the IELE network world-state can be taken as a first draft of a &quot;blockchain generic&quot; language.</p>
-<h3>Account Queries</h3>
+<h3 id="account-queries">Account Queries</h3>
 <ul>
 <li><code>REG = call @iele.balance(ACCT)</code> returns the balance of the specified account (zero if the account does not exist).</li>
 <li><code>REG = call @iele.extcodesize(ACCT)</code> returns the code si of the specified account (zero if the account does not exist).</li>
@@ -1155,7 +1149,7 @@ This is a right cons-list of <code>SubstateLogEntry</code> (which contains the a
          &lt;/account&gt;<span class="hljs-keyword">
        requires</span> CODE =/=K .Contract
 </code></pre>
-<h3>Account Storage Operations</h3>
+<h3 id="account-storage-operations">Account Storage Operations</h3>
 <p>These operations interact with the account storage.</p>
 <ul>
 <li><code>REG = sload INDEX</code> loads the word at INDEX from the account storage.</li>
@@ -1179,7 +1173,7 @@ This is a right cons-list of <code>SubstateLogEntry</code> (which contains the a
          &lt;refund&gt; R =&gt; R +<span class="hljs-keyword">Int</span> Rsstoreset &lt; SCHED &gt; *<span class="hljs-keyword">Int</span> maxInt(<span class="hljs-number">0</span>, intSize(OLD) -<span class="hljs-keyword">Int</span> intSize(VALUE)) &lt;/refund&gt;
          &lt;schedule&gt; SCHED &lt;/schedule&gt;
 </code></pre>
-<h3>Call Operations</h3>
+<h3 id="call-operations">Call Operations</h3>
 <p>The various <code>call*</code> (and other inter-contract control flow) operations will be desugared into these <code>InternalOp</code>s.</p>
 <ul>
 <li><code>#checkCall</code> checks that the current account has the balance necessary to invoke the contract call, and that the contract call stack depth limit has not been reached.</li>
@@ -1361,7 +1355,7 @@ If the function being called is not public, does not exist, or has the wrong num
          &lt;id&gt; ACCTFROM &lt;/id&gt;
          &lt;previousGas&gt; GAVAIL &lt;/previousGas&gt;
 </code></pre>
-<h3>Account Creation/Deletion</h3>
+<h3 id="account-creation%2Fdeletion">Account Creation/Deletion</h3>
 <ul>
 <li><code>#create____</code> transfers the endowment to the new account and triggers the execution of the initialization code.</li>
 <li><code>#codeDeposit_</code> checks the result of initialization code and whether the code deposit can be paid, indicating an error if not.</li>
@@ -1576,7 +1570,7 @@ Self destructing to yourself, unlike a regular transfer, destroys the balance in
          &lt;output&gt; _ =&gt; .Ints &lt;/output&gt;<span class="hljs-keyword">
 endmodule</span>
 </code></pre>
-<h1>Precompiled Contract</h1>
+<h1 id="precompiled-contract">Precompiled Contract</h1>
 <ul>
 <li><code>#precompiled</code> is a placeholder for the pre-compiled contracts at addresses 1.</li>
 </ul>
@@ -1736,7 +1730,7 @@ endmodule</span>
       requires</span> notBool isValidPoint(AK) orBool notBool isValidPoint(BK)<span class="hljs-keyword">
 endmodule</span>
 </code></pre>
-<h1>IELE Program Representations</h1>
+<h1 id="iele-program-representations">IELE Program Representations</h1>
 <p>The following code processes a <code>Contract</code> and loads it into the <code>&lt;program&gt;</code> cell.</p>
 <pre class="hljs"><code><span class="hljs-keyword">module</span> IELE-PROGRAM-LOADING<span class="hljs-keyword">
     imports</span> IELE-COMMON<span class="hljs-keyword">

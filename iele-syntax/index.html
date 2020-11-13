@@ -49,15 +49,7 @@
 <header
   class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar"
 >
-  <a class="logo-link" href="../index.html">
-    <img
-      class="logo-dark"
-      srcset="../assets/img/iele-logo.png"
-      alt="K"
-      style="height: 48px"
-    />
-    Semantic Framework
-  </a>
+  <a class="logo-link" href="../index.html"> IELE Semantics </a>
   <ul class="navbar-nav ml-md-auto">
     <li class="nav-item">
       <a
@@ -71,11 +63,13 @@
       </a>
     </li>
   </ul>
+  <!--
   <a
     class="btn btn-rv-blue d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"
     href="../downloads"
     >Download</a
   >
+  -->
 </header>
 
 
@@ -116,16 +110,16 @@
           class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content"
           role="main"
         >
-          <div class="markdown-preview"><html><head></head><body><h1>IELE Textual Syntax</h1>
-<p>Here we define the textual syntax of IELE assembly code. The syntax represented here has some syntactic sugar which is removed by the assembler. However, a fragment of this textual encoding is used by the semantics to express the rules of the language itself. The <a href="iele-examples">iele-examples</a> directory contains various sample IELE contracts, such as:</p>
+          <div class="markdown-preview"><html><head></head><body><h1 id="iele-textual-syntax">IELE Textual Syntax</h1>
+<p>Here we define the textual syntax of IELE assembly code. The syntax represented here has some syntactic sugar which is removed by the assembler. However, a fragment of this textual encoding is used by the semantics to express the rules of the language itself. The <a href="https://github.com/runtimeverification/iele-semantics/tree/master/iele-examples">iele-examples</a> directory contains various sample IELE contracts, such as:</p>
 <ul>
-<li>a <a href="iele-examples/simpleOpenAuction.iele">simple open auction contract</a>;</li>
-<li>an <a href="iele-examples/erc20.iele">ERC20 token</a>;  and</li>
-<li>a <a href="iele-examples/forwardingWallet.iele">forwarding wallet contract</a>.</li>
+<li>a <a href="https://github.com/runtimeverification/iele-semantics/tree/master/iele-examples/simpleOpenAuction.iele">simple open auction contract</a>;</li>
+<li>an <a href="https://github.com/runtimeverification/iele-semantics/tree/master/iele-examples/erc20.iele">ERC20 token</a>;  and</li>
+<li>a <a href="https://github.com/runtimeverification/iele-semantics/tree/master/iele-examples/forwardingWallet.iele">forwarding wallet contract</a>.</li>
 </ul>
-<p>The best way to understand the meaning of the IELE syntactic constructs is to read their actual formal semantics in <a href="iele/">iele.md</a>.</p>
-<h2>Names and Literals</h2>
-<h3>IELE Names</h3>
+<p>The best way to understand the meaning of the IELE syntactic constructs is to read their actual formal semantics in <a href="../iele/">iele.md</a>.</p>
+<h2 id="names-and-literals">Names and Literals</h2>
+<h3 id="iele-names">IELE Names</h3>
 <p>IELE uses alphanumeric names for identifying registers, labels, functions, and contracts. IELE &quot;keywords&quot; are also valid identifiers.</p>
 <pre class="hljs"><code><span class="hljs-keyword">module</span> IELE-SYNTAX<span class="hljs-keyword">
   imports</span> IELE-COMMON<span class="hljs-keyword">
@@ -160,7 +154,7 @@ endmodule</span>
   syntax</span> IeleName ::= IeleNameToken<span class="hljs-keyword">
   syntax</span> IeleName ::= StringIeleName [klabel(StringIeleName), <span class="hljs-literal">avoid</span>, symbol, function]
 </code></pre>
-<h3>Identifiers</h3>
+<h3 id="identifiers">Identifiers</h3>
 <p>IELE has two categories of identifiers: local and global names.</p>
 <ul>
 <li>Local names have function-wide scope, are used for naming registers, and begin with <code>%</code>.</li>
@@ -172,7 +166,7 @@ endmodule</span>
 
   syntax</span> LocalNames ::= List{LocalName, <span class="hljs-string">&quot;,&quot;</span>} [klabel(localNameList)]
 </code></pre>
-<h3>Constants</h3>
+<h3 id="constants">Constants</h3>
 <ul>
 <li>IELE constants include unbounded signed integer literals and globals.</li>
 <li>IELE globals serve as names with contract-wide scope that hold a constant value (cannot be modified).</li>
@@ -181,8 +175,8 @@ endmodule</span>
   syntax</span> IntConstant ::=<span class="hljs-keyword"> Int</span> |<span class="hljs-keyword"> Bool</span> | HexConstant<span class="hljs-keyword">
   syntax</span> HexConstant ::= r<span class="hljs-string">&quot;0x[0-9a-fA-F]+&quot;</span> [<span class="hljs-literal">token</span>]
 </code></pre>
-<h2>Instructions</h2>
-<h3>Operands</h3>
+<h2 id="instructions">Instructions</h2>
+<h3 id="operands">Operands</h3>
 <p>IELE instruction operands are used at the left- and right-hand side of IELE instructions.</p>
 <ul>
 <li>One or more <code>LValues</code> can be used at the left-hand side of various IELE instructions</li>
@@ -212,24 +206,24 @@ endmodule</span>
 
   syntax</span> NonEmptyInts ::= NeList{<span class="hljs-keyword">Int</span>, <span class="hljs-string">&quot;,&quot;</span>} [klabel(operandList)]
 </code></pre>
-<h3>Assignment</h3>
+<h3 id="assignment">Assignment</h3>
 <p>Simple copy assignment that loads a value into a register.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> AssignInst ::= LValue <span class="hljs-string">&quot;=&quot;</span> Operand
 </code></pre>
-<h3>Local Memory</h3>
-<p>Instructions that provide access to the local execution memory. For more details see <a href="Design.md#local-execution-memory">here</a>.</p>
+<h3 id="local-memory">Local Memory</h3>
+<p>Instructions that provide access to the local execution memory. For more details see <a href="../Design/#local-execution-memory">here</a>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> LoadInst ::= LValue <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;load&quot;</span> <span class="hljs-comment">/* cell */</span> Operand [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">2</span>)]<span class="hljs-keyword">
   syntax</span> LoadInst ::= LValue <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;load&quot;</span> <span class="hljs-comment">/* cell */</span> Operand <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-comment">/* offset in bytes */</span> Operand <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-comment">/* width in bytes */</span> Operand [hybrid, <span class="hljs-literal">seqstrict</span>(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>)]<span class="hljs-keyword">
   syntax</span> StoreInst ::= <span class="hljs-string">&quot;store&quot;</span> <span class="hljs-comment">/* value */</span> Operand <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-comment">/* cell */</span> Operand [hybrid, <span class="hljs-literal">seqstrict</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>)]<span class="hljs-keyword">
   syntax</span> StoreInst ::= <span class="hljs-string">&quot;store&quot;</span> <span class="hljs-comment">/* value */</span> Operand <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-comment">/* cell */</span> Operand <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-comment">/* offset in bytes */</span> Operand <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-comment">/* width in bytes */</span> Operand [hybrid, <span class="hljs-literal">seqstrict</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>)]
 </code></pre>
-<h3>Account Storage</h3>
-<p>Instructions that provide access to the account storage. For more details see <a href="Design.md#account-storage">here</a>.</p>
+<h3 id="account-storage">Account Storage</h3>
+<p>Instructions that provide access to the account storage. For more details see <a href="../Design/#account-storage">here</a>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> SLoadInst ::= LValue <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;sload&quot;</span> <span class="hljs-comment">/* index */</span> Operand [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">2</span>)]<span class="hljs-keyword">
   syntax</span> SStoreInst ::= <span class="hljs-string">&quot;sstore&quot;</span> <span class="hljs-comment">/* value */</span> Operand <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-comment">/* index */</span> Operand [hybrid, <span class="hljs-literal">seqstrict</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>)]
 </code></pre>
-<h3>Expressions</h3>
-<p>Various expressions over unbounded signed integers. For more details see <a href="Design.md#arbitrary-precision-words">here</a>.</p>
+<h3 id="expressions">Expressions</h3>
+<p>Various expressions over unbounded signed integers. For more details see <a href="../Design/#arbitrary-precision-words">here</a>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> IsZeroInst ::= LValue <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;iszero&quot;</span> Operand [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">2</span>)]<span class="hljs-keyword">
   syntax</span> NotInst    ::= LValue <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;not&quot;</span>    Operand [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">2</span>)]<span class="hljs-keyword">
 
@@ -260,13 +254,13 @@ endmodule</span>
 
   syntax</span> SHA3Inst ::= LValue <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;sha3&quot;</span> Operand [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">2</span>)]
 </code></pre>
-<h3>Static Jumps</h3>
-<p>Instructions for conditional and unconditional jumps within the function&apos;s body. For more details see <a href="Design.md#static-jumps">here</a>.</p>
+<h3 id="static-jumps">Static Jumps</h3>
+<p>Instructions for conditional and unconditional jumps within the function&apos;s body. For more details see <a href="../Design/#static-jumps">here</a>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> JumpInst     ::= <span class="hljs-string">&quot;br&quot;</span> IeleName<span class="hljs-keyword">
   syntax</span> CondJumpInst ::= <span class="hljs-string">&quot;br&quot;</span> Operand <span class="hljs-string">&quot;,&quot;</span> IeleName [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">1</span>)]
 </code></pre>
-<h3>Function Calls and Returns</h3>
-<p>Instructions for local functions calls to other functions of the same contract, as well as contract function calls to public functions of contracts deployed in other accounts. For more details see <a href="Design.md#function-callreturn">here</a>.</p>
+<h3 id="function-calls-and-returns">Function Calls and Returns</h3>
+<p>Instructions for local functions calls to other functions of the same contract, as well as contract function calls to public functions of contracts deployed in other accounts. For more details see <a href="../Design/#function-callreturn">here</a>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> LocalCallInst   ::= <span class="hljs-string">&quot;call&quot;</span> Operand <span class="hljs-string">&quot;(&quot;</span> Operands <span class="hljs-string">&quot;)&quot;</span>
                            | LValues <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;call&quot;</span> Operand <span class="hljs-string">&quot;(&quot;</span> Operands <span class="hljs-string">&quot;)&quot;</span> [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)]<span class="hljs-keyword">
   syntax</span> AccountCallInst ::= LValues <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;call&quot;</span> Operand <span class="hljs-string">&quot;at&quot;</span> Operand <span class="hljs-string">&quot;(&quot;</span> Operands <span class="hljs-string">&quot;)&quot;</span> <span class="hljs-string">&quot;send&quot;</span> Operand <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-string">&quot;gaslimit&quot;</span> Operand [hybrid, <span class="hljs-literal">seqstrict</span>(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>)]<span class="hljs-keyword">
@@ -278,19 +272,19 @@ endmodule</span>
                       | <span class="hljs-string">&quot;ret&quot;</span> <span class="hljs-string">&quot;void&quot;</span><span class="hljs-keyword">
   syntax</span> RevertInst ::= <span class="hljs-string">&quot;revert&quot;</span> Operand [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">1</span>)]
 </code></pre>
-<h3>Logging</h3>
+<h3 id="logging">Logging</h3>
 <p>Instructions to append information to the substate log. These variations append the entire content of a local execution memory cell to the log along with zero to four log topics.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> LogInst ::= <span class="hljs-string">&quot;log&quot;</span> <span class="hljs-comment">/* cell */</span> Operand [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">1</span>)]
                    | <span class="hljs-string">&quot;log&quot;</span> <span class="hljs-comment">/* cell */</span> Operand <span class="hljs-string">&quot;,&quot;</span> NonEmptyOperands [hybrid, <span class="hljs-literal">seqstrict</span>(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>)]
 </code></pre>
-<h3>Account Creation and Deletion</h3>
-<p>Instructions to create and/or delete a new account with a contract deployed with it. For more details see <a href="Design.md#contract-creation">here</a>.</p>
+<h3 id="account-creation-and-deletion">Account Creation and Deletion</h3>
+<p>Instructions to create and/or delete a new account with a contract deployed with it. For more details see <a href="../Design/#contract-creation">here</a>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> CreateInst ::= <span class="hljs-comment">/* exit status */</span> LValue <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-comment">/* new account address */</span> LValue <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;create&quot;</span>     <span class="hljs-comment">/* contract name */</span>    IeleName <span class="hljs-string">&quot;(&quot;</span> Operands <span class="hljs-string">&quot;)&quot;</span> <span class="hljs-string">&quot;send&quot;</span> Operand [hybrid, <span class="hljs-literal">seqstrict</span>(<span class="hljs-number">4</span>,<span class="hljs-number">5</span>)]<span class="hljs-keyword">
   syntax</span> CreateInst ::= <span class="hljs-comment">/* exit status */</span> LValue <span class="hljs-string">&quot;,&quot;</span> <span class="hljs-comment">/* new account address */</span> LValue <span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&quot;copycreate&quot;</span> <span class="hljs-comment">/* contract address */</span> Operand  <span class="hljs-string">&quot;(&quot;</span> Operands <span class="hljs-string">&quot;)&quot;</span> <span class="hljs-string">&quot;send&quot;</span> Operand [hybrid, <span class="hljs-literal">seqstrict</span>(<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>)]<span class="hljs-keyword">
 
   syntax</span> SelfdestructInst ::= <span class="hljs-string">&quot;selfdestruct&quot;</span> <span class="hljs-comment">/* account to send balance */</span> Operand [hybrid, <span class="hljs-literal">strict</span>(<span class="hljs-number">1</span>)]
 </code></pre>
-<h3>Local and Network State Accessors</h3>
+<h3 id="local-and-network-state-accessors">Local and Network State Accessors</h3>
 <p>These accessors are implemented as builtins that can be called using the same syntax as in a local call, e.g. <code>%pc = call @iele.pc()</code> or <code>%balance = call @iele.balance(%bank.account)</code>. The names of the builtins follow the IELE convention for intrinsics: Their name is a valid global name that starts with the prefix <code>iele.</code>. This means that no user-defined global name can start with the prefix <code>iele.</code>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> IeleNameToken ::= <span class="hljs-string">&quot;iele.invalid&quot;</span>     [<span class="hljs-literal">token</span>]
   <span class="hljs-comment">// local state queries</span><span class="hljs-keyword">
@@ -312,7 +306,7 @@ endmodule</span>
   syntax</span> IeleNameToken ::= <span class="hljs-string">&quot;iele.balance&quot;</span>     [<span class="hljs-literal">token</span>]<span class="hljs-keyword">
   syntax</span> IeleNameToken ::= <span class="hljs-string">&quot;iele.extcodesize&quot;</span> [<span class="hljs-literal">token</span>]
 </code></pre>
-<h3>Precompiled Contracts</h3>
+<h3 id="precompiled-contracts">Precompiled Contracts</h3>
 <p>Precompiled contracts are also available as IELE builtins but they should be called using the syntax for an account call targeting the account with address <code>1</code> (e.g. <code>%res  = call @iele.sha256 at 1 ( %len, %data ) send %val, gaslimit %gas</code>).</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> IeleNameToken ::= <span class="hljs-string">&quot;iele.ecrec&quot;</span>     [<span class="hljs-literal">token</span>]<span class="hljs-keyword">
   syntax</span> IeleNameToken ::= <span class="hljs-string">&quot;iele.sha256&quot;</span>    [<span class="hljs-literal">token</span>]<span class="hljs-keyword">
@@ -322,7 +316,7 @@ endmodule</span>
   syntax</span> IeleNameToken ::= <span class="hljs-string">&quot;iele.ecmul&quot;</span>     [<span class="hljs-literal">token</span>]<span class="hljs-keyword">
   syntax</span> IeleNameToken ::= <span class="hljs-string">&quot;iele.ecpairing&quot;</span> [<span class="hljs-literal">token</span>]
 </code></pre>
-<h4>Instruction Lists</h4>
+<h4 id="instruction-lists">Instruction Lists</h4>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> Instruction ::=
     AssignInst
   | LoadInst
@@ -363,8 +357,8 @@ endmodule</span>
 
   syntax</span> Instructions ::= List{Instruction, <span class="hljs-string">&quot;&quot;</span>} [klabel(instructionList), format(%<span class="hljs-number">1</span>%<span class="hljs-number">2</span>%n%<span class="hljs-number">3</span>)]
 </code></pre>
-<h2>IELE Program Structure</h2>
-<h3>Contracts</h3>
+<h2 id="iele-program-structure">IELE Program Structure</h2>
+<h3 id="contracts">Contracts</h3>
 <p>A contract is a compilation unit of code to be deployed with an account in the blockchain.</p>
 <ul>
 <li>A IELE program consists of a list of one or more contracts.</li>
@@ -372,7 +366,7 @@ endmodule</span>
 <li>Each contract has a name and consists of a list of top-level definitions.</li>
 <li>Top-level definitions include external contract declarations, global definitions, and function definitions.</li>
 </ul>
-<p>For more details see below and <a href="Design.md#program-structure">here</a>.</p>
+<p>For more details see below and <a href="../Design/#program-structure">here</a>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> TopLevelDefinition ::=
     FunctionDefinition
   | GlobalDefinition
@@ -384,15 +378,15 @@ endmodule</span>
 
   syntax</span> Contract ::= List{ContractDefinition, <span class="hljs-string">&quot;&quot;</span>} [klabel(contractDefinitionList)]
 </code></pre>
-<h3>Contract declarations</h3>
+<h3 id="contract-declarations">Contract declarations</h3>
 <p>A contract can only create accounts with deployed contracts that have been externaly declared within its top-level. A corresponding contract definition for each external contract declaration should precede this contract definition. This design decision ensures that a contract can only create new accounts with deployed contracts for which the code is available to it.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> ContractDeclaration ::= <span class="hljs-string">&quot;external&quot;</span> <span class="hljs-string">&quot;contract&quot;</span> IeleName
 </code></pre>
-<h3>Global Registers</h3>
+<h3 id="global-registers">Global Registers</h3>
 <p>Definition of globals and their constant values. Globals are accessible from within any function of the contract and their value cannot be modified.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> GlobalDefinition ::= GlobalName <span class="hljs-string">&quot;=&quot;</span> IntConstant  [klabel(globalDefinition)]
 </code></pre>
-<h3>Functions</h3>
+<h3 id="functions">Functions</h3>
 <p>Function definitions consist of a function signature (function name and names of formal arguments) and a function body (a list of blocks containing the code of the function). Functions can be defined as <code>public</code> meaning that they can be called from a contract deployed with another account. Non-<code>public</code> functions can only be called locally within the contract.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> FunctionSignature ::= GlobalName <span class="hljs-string">&quot;(&quot;</span> FunctionParameters <span class="hljs-string">&quot;)&quot;</span><span class="hljs-keyword">
 
@@ -402,7 +396,7 @@ endmodule</span>
     <span class="hljs-string">&quot;define&quot;</span> FunctionSignature <span class="hljs-string">&quot;{&quot;</span> Blocks <span class="hljs-string">&quot;}&quot;</span>             [format(%<span class="hljs-number">1</span> %<span class="hljs-number">2</span> %<span class="hljs-number">3</span>%i%n%<span class="hljs-number">4</span>%d%n%<span class="hljs-number">5</span>%n)]
   | <span class="hljs-string">&quot;define&quot;</span> <span class="hljs-string">&quot;public&quot;</span> FunctionSignature <span class="hljs-string">&quot;{&quot;</span> Blocks <span class="hljs-string">&quot;}&quot;</span> [format(%<span class="hljs-number">1</span> %<span class="hljs-number">2</span> %<span class="hljs-number">3</span> %<span class="hljs-number">4</span>%i%n%<span class="hljs-number">5</span>%d%n%<span class="hljs-number">6</span>%n)]
 </code></pre>
-<h3>Blocks</h3>
+<h3 id="blocks">Blocks</h3>
 <p>The body of a function is a list of blocks, where each block is a list of IELE instructions. Each block except the first one has to be preceded by a label, making the first instruction of the block a valid target of a local jump. The first block can also be optionally labeled.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  syntax</span> LabeledBlock ::= IeleName <span class="hljs-string">&quot;:&quot;</span> Instructions<span class="hljs-keyword">
 
@@ -413,7 +407,7 @@ endmodule</span>
   syntax</span> Blocks [flatPredicate]<span class="hljs-keyword">
   syntax</span> Blocks ::= UnlabeledBlock LabeledBlocks [<span class="hljs-literal">avoid</span>] | LabeledBlocks
 </code></pre>
-<h3>Reserved IELE Function Names</h3>
+<h3 id="reserved-iele-function-names">Reserved IELE Function Names</h3>
 <ul>
 <li>An account to which code has never been deployed contains an implicit contract with one public function named <code>@deposit</code> which takes no arguments, returns no values, and does nothing. This function exists to allow such accounts to receive payments.</li>
 <li>A special private function named <code>@init</code> should be defined for every contract and will be called when an account is created with this contract.</li>
@@ -422,7 +416,7 @@ endmodule</span>
 
   syntax</span> IeleNameToken ::= <span class="hljs-string">&quot;init&quot;</span> [<span class="hljs-literal">token</span>]
 </code></pre>
-<h4>Macros</h4>
+<h4 id="macros">Macros</h4>
 <p>Finally, following are macros for desugaring empty <code>LValues</code> and <code>Operands</code> lists in calls and returns.</p>
 <pre class="hljs"><code><span class="hljs-keyword">  rule</span> call NAME ( ARGS ) =&gt; .LValues = call NAME ( ARGS ) [alias]<span class="hljs-keyword">
   rule</span> ret void =&gt; ret .NonEmptyOperands [alias]<span class="hljs-keyword">
