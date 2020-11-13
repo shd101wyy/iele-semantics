@@ -113,19 +113,19 @@
           <div class="markdown-preview"><html><head></head><body><h1 id="iele%3A-semantics-of-new-blockchain-vm-in-k">IELE: Semantics of New Blockchain VM in K</h1>
 <p>In this repository we provide a model of IELE in K.</p>
 <h3 id="structure">Structure</h3>
-<p>The file <a href="../iele-syntax/">iele-syntax.md</a> contains the syntax definition of IELE, along with comments that guide the reader through the structure of the language and links to more detailed descriptions of various features. This file is a good starting point for getting familiar with the language.</p>
-<p>The file <a href="../data/">data.md</a> explains the basic data of IELE (including words and some datastructures over them).
+<p>The file <a href="/iele-syntax/">iele-syntax.md</a> contains the syntax definition of IELE, along with comments that guide the reader through the structure of the language and links to more detailed descriptions of various features. This file is a good starting point for getting familiar with the language.</p>
+<p>The file <a href="/data/">data.md</a> explains the basic data of IELE (including words and some datastructures over them).
 This data is defined functionally.</p>
-<p><a href="../iele/">iele.md</a> is the file containing the semantics of IELE.
+<p><a href="/iele/">iele.md</a> is the file containing the semantics of IELE.
 This file contains the <strong>configuration</strong> (a map of the state), and a simple imperative execution machine which IELE lives on top of.
 It deals with the semantics of opcodes and parsing/unparsing/assembling/disassembling.</p>
-<p><a href="../iele-gas/">iele-gas.md</a> describes gas price computations. <a href="../iele-gas-summary/">iele-gas-summary.md</a> summarizes them in a format readable by those who don&apos;t know K.</p>
-<p>Finally, the file <a href="../Design/">Design.md</a> discusses the design rationale of IELE. It also provides more detailed descriptions of various IELE features, as well as differences and similarities with EVM and LLVM.</p>
+<p><a href="/iele-gas/">iele-gas.md</a> describes gas price computations. <a href="/iele-gas-summary/">iele-gas-summary.md</a> summarizes them in a format readable by those who don&apos;t know K.</p>
+<p>Finally, the file <a href="/Design/">Design.md</a> discusses the design rationale of IELE. It also provides more detailed descriptions of various IELE features, as well as differences and similarities with EVM and LLVM.</p>
 <h3 id="testing">Testing</h3>
-<p><a href="../iele-testing/">iele-testing.md</a> loads test-files from the <a href="https://github.com/ethereum/tests" target="_blank" rel="noopener">Ethereum Test Set</a> and executes them, checking that the output is correct.
+<p><a href="/iele-testing/">iele-testing.md</a> loads test-files from the <a href="https://github.com/ethereum/tests" target="_blank" rel="noopener">Ethereum Test Set</a> and executes them, checking that the output is correct.
 If the output is correct, the entire configuration is cleared.
 If any check fails, the configuration retains the failed check at the top of the <code>&lt;k&gt;</code> cell.</p>
-<p><a href="../iele-testing/">iele-testing.md</a> is also capable of executing tests of arbitrary IELE transactions (subject to the fact that this first release of IELE is still
+<p><a href="/iele-testing/">iele-testing.md</a> is also capable of executing tests of arbitrary IELE transactions (subject to the fact that this first release of IELE is still
 built on top of an ethereum-like network layer). The test format is based off of, but slightly different from, the ethereum BlockchainTest json test format.</p>
 <p>The structure of the json files is as follows:</p>
 <ul>
@@ -189,7 +189,7 @@ built on top of an ethereum-like network layer). The test format is based off of
 <p>For example pure-IELE tests, see <code>tests/iele</code>.</p>
 <h2 id="using-the-definition">Using the Definition</h2>
 <h3 id="installing">Installing</h3>
-<p>See <a href="../INSTALL/">INSTALL.md</a>.</p>
+<p>See <a href="/INSTALL/">INSTALL.md</a>.</p>
 <h3 id="testing-1">Testing</h3>
 <p>To execute a VM test, run <code>./vmtest $file</code> where <code>$file</code> is a JSON file containing the specification of the test.
 To execute a Blockchain test, run <code>./blockchaintest $file</code> where <code>$file</code> is a JSON file containing the specification of the test.</p>
