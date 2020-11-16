@@ -113,19 +113,19 @@
           <div class="markdown-preview"><html><head></head><body><h1 id="iele%3A-semantics-of-new-blockchain-vm-in-k">IELE: Semantics of New Blockchain VM in K</h1>
 <p>In this repository we provide a model of IELE in K.</p>
 <h3 id="structure">Structure</h3>
-<p>The file <a href="./iele-syntax/">iele-syntax.md</a> contains the syntax definition of IELE, along with comments that guide the reader through the structure of the language and links to more detailed descriptions of various features. This file is a good starting point for getting familiar with the language.</p>
-<p>The file <a href="./data/">data.md</a> explains the basic data of IELE (including words and some datastructures over them).
+<p>The file <a href="iele-syntax/">iele-syntax.md</a> contains the syntax definition of IELE, along with comments that guide the reader through the structure of the language and links to more detailed descriptions of various features. This file is a good starting point for getting familiar with the language.</p>
+<p>The file <a href="data/">data.md</a> explains the basic data of IELE (including words and some datastructures over them).
 This data is defined functionally.</p>
-<p><a href="./iele/">iele.md</a> is the file containing the semantics of IELE.
+<p><a href="iele/">iele.md</a> is the file containing the semantics of IELE.
 This file contains the <strong>configuration</strong> (a map of the state), and a simple imperative execution machine which IELE lives on top of.
 It deals with the semantics of opcodes and parsing/unparsing/assembling/disassembling.</p>
-<p><a href="./iele-gas/">iele-gas.md</a> describes gas price computations. <a href="./iele-gas-summary/">iele-gas-summary.md</a> summarizes them in a format readable by those who don&apos;t know K.</p>
-<p>Finally, the file <a href="./Design/">Design.md</a> discusses the design rationale of IELE. It also provides more detailed descriptions of various IELE features, as well as differences and similarities with EVM and LLVM.</p>
+<p><a href="iele-gas/">iele-gas.md</a> describes gas price computations. <a href="iele-gas-summary/">iele-gas-summary.md</a> summarizes them in a format readable by those who don&apos;t know K.</p>
+<p>Finally, the file <a href="Design/">Design.md</a> discusses the design rationale of IELE. It also provides more detailed descriptions of various IELE features, as well as differences and similarities with EVM and LLVM.</p>
 <h3 id="testing">Testing</h3>
-<p><a href="./iele-testing/">iele-testing.md</a> loads test-files from the <a href="https://github.com/ethereum/tests" target="_blank" rel="noopener">Ethereum Test Set</a> and executes them, checking that the output is correct.
+<p><a href="iele-testing/">iele-testing.md</a> loads test-files from the <a href="https://github.com/ethereum/tests" target="_blank" rel="noopener">Ethereum Test Set</a> and executes them, checking that the output is correct.
 If the output is correct, the entire configuration is cleared.
 If any check fails, the configuration retains the failed check at the top of the <code>&lt;k&gt;</code> cell.</p>
-<p><a href="./iele-testing/">iele-testing.md</a> is also capable of executing tests of arbitrary IELE transactions (subject to the fact that this first release of IELE is still
+<p><a href="iele-testing/">iele-testing.md</a> is also capable of executing tests of arbitrary IELE transactions (subject to the fact that this first release of IELE is still
 built on top of an ethereum-like network layer). The test format is based off of, but slightly different from, the ethereum BlockchainTest json test format.</p>
 <p>The structure of the json files is as follows:</p>
 <ul>
@@ -189,7 +189,7 @@ built on top of an ethereum-like network layer). The test format is based off of
 <p>For example pure-IELE tests, see <code>tests/iele</code>.</p>
 <h2 id="using-the-definition">Using the Definition</h2>
 <h3 id="installing">Installing</h3>
-<p>See <a href="./INSTALL/">INSTALL.md</a>.</p>
+<p>See <a href="INSTALL/">INSTALL.md</a>.</p>
 <h3 id="testing-1">Testing</h3>
 <p>To execute a VM test, run <code>./vmtest $file</code> where <code>$file</code> is a JSON file containing the specification of the test.
 To execute a Blockchain test, run <code>./blockchaintest $file</code> where <code>$file</code> is a JSON file containing the specification of the test.</p>
@@ -206,13 +206,13 @@ information about exactly what went wrong with the test, which can be used for d
 the string <code>`&lt;generatedTop&gt;`(`&lt;k&gt;`</code> followed by the current list of instructions to be executed by the VM in balanced parentheses. You can usually
 determine what went wrong with the test by examining the first entry in the list (i.e., everything up to the first <code>~&gt;</code>).</p>
 <p>Some examples of common errors you may encounter are below, with each example followed by a description of the error.</p>
-<pre class="hljs"><code>loadTx(#token(&quot;966588469268559010541288244128342317224451555083&quot;,&quot;Int&quot;))
+<pre class="language-text"><code>loadTx(#token(&quot;966588469268559010541288244128342317224451555083&quot;,&quot;Int&quot;))
 </code></pre>
 <p>In this example, either a transaction was signed incorrectly, or the sender of the transaction as specified by its signature does not exist.</p>
-<pre class="hljs"><code>`check__IELE-TESTING`(`_:__IELE-DATA`(#token(&quot;\&quot;account\&quot;&quot;,&quot;String&quot;),`{_}_IELE-DATA`(`_,__IELE-DATA`(`_:__IELE-DATA`(#token(&quot;91343852333181432387730302044767688728495783936&quot;,&quot;Int&quot;),`{_}_IELE-DATA`(`_,__IELE-DATA`(`_:__IELE-DATA`(#token(&quot;\&quot;storage\&quot;&quot;,&quot;String&quot;),`_Map_`(`_|-&gt;_`(#token(&quot;0&quot;,&quot;Int&quot;),#token(&quot;10001&quot;,&quot;Int&quot;)),`_|-&gt;_`(#token(&quot;2428090106599461928744973076844625336880384098059&quot;,&quot;Int&quot;),#token(&quot;10000&quot;,&quot;Int&quot;)))),`.List{&quot;_,__IELE-DATA&quot;}`(.KList)))),`.List{&quot;_,__IELE-DATA&quot;}`(.KList)))))
+<pre class="language-text"><code>`check__IELE-TESTING`(`_:__IELE-DATA`(#token(&quot;\&quot;account\&quot;&quot;,&quot;String&quot;),`{_}_IELE-DATA`(`_,__IELE-DATA`(`_:__IELE-DATA`(#token(&quot;91343852333181432387730302044767688728495783936&quot;,&quot;Int&quot;),`{_}_IELE-DATA`(`_,__IELE-DATA`(`_:__IELE-DATA`(#token(&quot;\&quot;storage\&quot;&quot;,&quot;String&quot;),`_Map_`(`_|-&gt;_`(#token(&quot;0&quot;,&quot;Int&quot;),#token(&quot;10001&quot;,&quot;Int&quot;)),`_|-&gt;_`(#token(&quot;2428090106599461928744973076844625336880384098059&quot;,&quot;Int&quot;),#token(&quot;10000&quot;,&quot;Int&quot;)))),`.List{&quot;_,__IELE-DATA&quot;}`(.KList)))),`.List{&quot;_,__IELE-DATA&quot;}`(.KList)))))
 </code></pre>
 <p>Here account 91343852333181432387730302044767688728495783936 (in decimal) has different values for storage than expected by the test. Similar errors exist for the nonce, balance, and code of an account. You can refer to the <code>&lt;storage&gt;</code> cell in the dumped state for information on their actual values. The correct storage cell is nested within an <code>&lt;account&gt;</code> cell whose <code>&lt;acctID&gt;</code> is the address of the account in decimal.</p>
-<pre class="hljs"><code>`check__IELE-TESTING`(`_:__IELE-DATA`(#token(&quot;\&quot;out\&quot;&quot;,&quot;String&quot;),`[_]_IELE-DATA`(`_,__IELE-DATA`(#token(&quot;\&quot;0x01\&quot;&quot;,&quot;String&quot;),`.List{&quot;_,__IELE-DATA&quot;}`(.KList)))))
+<pre class="language-text"><code>`check__IELE-TESTING`(`_:__IELE-DATA`(#token(&quot;\&quot;out\&quot;&quot;,&quot;String&quot;),`[_]_IELE-DATA`(`_,__IELE-DATA`(#token(&quot;\&quot;0x01\&quot;&quot;,&quot;String&quot;),`.List{&quot;_,__IELE-DATA&quot;}`(.KList)))))
 </code></pre>
 <p>Here is a similar error, but the error states that the transaction returned an incorrect list of values. The actual return value can be found in the <code>&lt;output&gt;</code> cell.</p>
 <p>If other errors occur that are not on this list, feel free to contact us on Gitter or Riot and we will be happy to assist in helping you understand. Future releases of IELE may also have improved debugging information making this easier to interpret.</p>
@@ -265,26 +265,26 @@ We will test this with <code>./tests/ci/with-k bothk ./Build test-all</code> (or
 </li>
 <li>
 <p>Place a line of <code>-</code> after each block of syntax declarations.</p>
-<pre class="hljs"><code><span class="hljs-keyword">    syntax</span> Foo ::= <span class="hljs-string">&quot;newSymbol&quot;</span>
- <span class="hljs-comment">// --------------------------</span><span class="hljs-keyword">
-    rule</span> &lt;k&gt; newSymbol =&gt; . ... &lt;/k&gt;
+<pre class="language-k"><code>    <span class="token keyword">syntax</span> Foo <span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">=</span> <span class="token string">&quot;newSymbol&quot;</span>
+ <span class="token comment">// --------------------------</span>
+    <span class="token keyword">rule</span> <span class="token operator">&lt;</span>k<span class="token operator">&gt;</span> newSymbol <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token operator">&lt;</span><span class="token operator">/</span>k<span class="token operator">&gt;</span>
 </code></pre>
 <p>Notice that if there are rules immediately following the syntax declaration, a commented-out line of <code>-</code> is inserted afterward.
 Notice that the width of the line of <code>-</code> matches that of the preceding line.</p>
 </li>
 <li>
 <p>Place spaces around parentheses and commas in K&apos;s pretty functional-style syntax declarations.</p>
-<pre class="hljs"><code><span class="hljs-keyword">    syntax</span> Foo ::= newFunctionalSyntax (<span class="hljs-keyword"> Int</span> ,<span class="hljs-keyword"> String</span> )
- <span class="hljs-comment">// ---------------------------------------------------</span>
+<pre class="language-k"><code>    <span class="token keyword">syntax</span> Foo <span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">=</span> newFunctionalSyntax <span class="token punctuation">(</span> <span class="token keyword">Int</span> <span class="token punctuation">,</span> <span class="token keyword">String</span> <span class="token punctuation">)</span>
+ <span class="token comment">// ---------------------------------------------------</span>
 </code></pre>
 </li>
 <li>
 <p>When multiple structurally-similar rules are present, line up as much as possible (and makes sense).</p>
-<pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; #do1       =&gt; . ... &lt;/k&gt; &lt;cell1&gt; not-done =&gt; done        &lt;/cell1&gt;<span class="hljs-keyword">
-    rule</span> &lt;k&gt; #do1Longer =&gt; . ... &lt;/k&gt; &lt;cell1&gt; not-done =&gt; done-longer &lt;/cell1&gt;<span class="hljs-keyword">
+<pre class="language-k"><code>    <span class="token keyword">rule</span> <span class="token operator">&lt;</span>k<span class="token operator">&gt;</span> #do1       <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token operator">&lt;</span><span class="token operator">/</span>k<span class="token operator">&gt;</span> <span class="token operator">&lt;</span>cell1<span class="token operator">&gt;</span> not<span class="token operator">-</span>done <span class="token operator">=</span><span class="token operator">&gt;</span> done        <span class="token operator">&lt;</span><span class="token operator">/</span>cell1<span class="token operator">&gt;</span>
+    <span class="token keyword">rule</span> <span class="token operator">&lt;</span>k<span class="token operator">&gt;</span> #do1Longer <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token operator">&lt;</span><span class="token operator">/</span>k<span class="token operator">&gt;</span> <span class="token operator">&lt;</span>cell1<span class="token operator">&gt;</span> not<span class="token operator">-</span>done <span class="token operator">=</span><span class="token operator">&gt;</span> done<span class="token operator">-</span>longer <span class="token operator">&lt;</span><span class="token operator">/</span>cell1<span class="token operator">&gt;</span>
 
-    rule</span> &lt;k&gt; #do2     =&gt; . ... &lt;/k&gt; &lt;cell2&gt; not-done =&gt; done2 &lt;/cell2&gt;<span class="hljs-keyword">
-    rule</span> &lt;k&gt; #doShort =&gt; . ... &lt;/k&gt; &lt;cell2&gt; nd       =&gt; done2 &lt;/cell2&gt;
+    <span class="token keyword">rule</span> <span class="token operator">&lt;</span>k<span class="token operator">&gt;</span> #do2     <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token operator">&lt;</span><span class="token operator">/</span>k<span class="token operator">&gt;</span> <span class="token operator">&lt;</span>cell2<span class="token operator">&gt;</span> not<span class="token operator">-</span>done <span class="token operator">=</span><span class="token operator">&gt;</span> done2 <span class="token operator">&lt;</span><span class="token operator">/</span>cell2<span class="token operator">&gt;</span>
+    <span class="token keyword">rule</span> <span class="token operator">&lt;</span>k<span class="token operator">&gt;</span> #doShort <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token operator">&lt;</span><span class="token operator">/</span>k<span class="token operator">&gt;</span> <span class="token operator">&lt;</span>cell2<span class="token operator">&gt;</span> nd       <span class="token operator">=</span><span class="token operator">&gt;</span> done2 <span class="token operator">&lt;</span><span class="token operator">/</span>cell2<span class="token operator">&gt;</span>
 </code></pre>
 <p>This makes it simpler to make changes to entire groups of rules at a time using sufficiently modern editors.
 Notice that if we break alignment (eg. from the <code>#do1</code> group above to the <code>#do2</code> group), we put an extra line between the groups of rules.</p>
@@ -292,11 +292,11 @@ Notice that if we break alignment (eg. from the <code>#do1</code> group above to
 <li>
 <p>Line up the <code>r</code> in <code>requires</code> with the <code>l</code> in <code>rule</code> (if it&apos;s not all on one line).
 Similarly, line up the end of <code>andBool</code> for extra side-conditions with the end of <code>requires</code>.</p>
-<pre class="hljs"><code><span class="hljs-keyword">    rule</span> &lt;k&gt; A =&gt; B ... &lt;/k&gt;
-         SOME_LARGE_CONFIGURATION<span class="hljs-keyword">
+<pre class="language-k"><code>    <span class="token keyword">rule</span> <span class="token operator">&lt;</span>k<span class="token operator">&gt;</span> A <span class="token operator">=</span><span class="token operator">&gt;</span> B <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token operator">&lt;</span><span class="token operator">/</span>k<span class="token operator">&gt;</span>
+         SOME_LARGE_CONFIGURATION
 
-      requires</span> A &gt; <span class="hljs-number">3</span>
-       andBool isPrime(A)
+      <span class="token keyword">requires</span> A <span class="token operator">&gt;</span> <span class="token number">3</span>
+       andBool isPrime<span class="token punctuation">(</span>A<span class="token punctuation">)</span>
 </code></pre>
 </li>
 </ul>
