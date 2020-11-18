@@ -152,7 +152,7 @@
   <span class="token keyword">syntax</span> IeleName <span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">=</span> NumericIeleName
   <span class="token keyword">syntax</span> IeleNameToken <span class="token punctuation">[</span><span class="token class-name">token</span><span class="token punctuation">]</span>
   <span class="token keyword">syntax</span> IeleName <span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">=</span> IeleNameToken
-  <span class="token keyword">syntax</span> IeleName <span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">=</span> StringIeleName <span class="token punctuation">[</span><span class="token class-name">klabel</span><span class="token punctuation">(</span>StringIeleName<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">avoid</span><span class="token punctuation">,</span> symbol<span class="token punctuation">,</span> function<span class="token punctuation">]</span>
+  <span class="token keyword">syntax</span> IeleName <span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">=</span> StringIeleName <span class="token punctuation">[</span><span class="token class-name">klabel</span><span class="token punctuation">(</span>StringIeleName<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">avoid</span><span class="token punctuation">,</span> <span class="token class-name">symbol</span><span class="token punctuation">,</span> function<span class="token punctuation">]</span>
 </code></pre>
 <h3 id="identifiers">Identifiers</h3>
 <p>IELE has two categories of identifiers: local and global names.</p>
@@ -418,8 +418,8 @@
 </code></pre>
 <h4 id="macros">Macros</h4>
 <p>Finally, following are macros for desugaring empty <code>LValues</code> and <code>Operands</code> lists in calls and returns.</p>
-<pre class="language-k"><code>  <span class="token keyword">rule</span> call NAME <span class="token punctuation">(</span> ARGS <span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">.</span>LValues <span class="token operator">=</span> call NAME <span class="token punctuation">(</span> ARGS <span class="token punctuation">)</span> <span class="token punctuation">[</span>alias<span class="token punctuation">]</span>
-  <span class="token keyword">rule</span> ret void <span class="token operator">=</span><span class="token operator">&gt;</span> ret <span class="token punctuation">.</span>NonEmptyOperands <span class="token punctuation">[</span>alias<span class="token punctuation">]</span>
+<pre class="language-k"><code>  <span class="token keyword">rule</span> call NAME <span class="token punctuation">(</span> ARGS <span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">.</span>LValues <span class="token operator">=</span> call NAME <span class="token punctuation">(</span> ARGS <span class="token punctuation">)</span> <span class="token punctuation">[</span>alias<span class="token punctuation">]</span>
+  <span class="token keyword">rule</span> ret void <span class="token operator">=&gt;</span> ret <span class="token punctuation">.</span>NonEmptyOperands <span class="token punctuation">[</span>alias<span class="token punctuation">]</span>
 <span class="token keyword">endmodule</span>
 </code></pre>
 </body></html></div>
